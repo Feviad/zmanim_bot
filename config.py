@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-TOKEN = '340859374:AAFbEOMD1geG98Rp77XhuKkJz7A6ND0vxQo'
-TOKEN_T = '337565441:AAF7mIekNHXTgmrK5sVeVCYXNy9GC0CxHu8'
-GOOGLE_API_KEY = 'AIzaSyBrOyhAy0pxRKWoDMidCFvFpe-jkpXh-RE'
-TIMEZONE_DB_API_KEY = '2KSPDV130SP1'
+import os
+
+
+TOKEN = os.environ['TOKEN']
+BOTAN_KEY = os.environ['BOTAN_KEY']
+TIMEZONE_DB_API_KEY = os.environ['TIMEZONE_DB_API_KEY']
+URL = os.environ['URL']
+DB_NAME = 'd9pk484q6ji7oh'

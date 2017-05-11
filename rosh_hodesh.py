@@ -108,8 +108,8 @@ def get_rh_date_and_day(hebrew_date, lenght, lang):
                 elif lang == 'English':
                     rh_days = '{} and 1 {} and {} {}'.format(
                         first_day,
-                        data.gr_months_index_e[last_month_day[1]],
-                        data.gr_months_index_e[last_month_day[1] + 1],
+                        data.gr_months_index_en[last_month_day[1]],
+                        data.gr_months_index_en[last_month_day[1] + 1],
                         last_month_day[0]
                     )
                 # определяем день недели
@@ -140,7 +140,7 @@ def get_rh_date_and_day(hebrew_date, lenght, lang):
                 rh_days = '{} and {} {} {}'.format(
                     first_day,
                     first_day + 1,
-                    data.gr_months_index_e[last_month_day[1]],
+                    data.gr_months_index_en[last_month_day[1]],
                     last_month_day[0]
                 )
             # определяем день недели
@@ -190,7 +190,7 @@ def get_rh_date_and_day(hebrew_date, lenght, lang):
                     )
                 elif lang == 'English':
                     rh_days = '1 {} {}'.format(
-                        data.gr_months_index_e[last_month_day[1] + 1],
+                        data.gr_months_index_en[last_month_day[1] + 1],
                         last_month_day[0]
                     )
                 # определяем день недели
@@ -213,7 +213,7 @@ def get_rh_date_and_day(hebrew_date, lenght, lang):
             elif lang == 'English':
                 rh_days = '{} {} {}'.format(
                     last_month_day[2] + 1,
-                    data.gr_months_index_e[last_month_day[1]],
+                    data.gr_months_index_en[last_month_day[1]],
                     last_month_day[0]
                 )
             # определяем день недели

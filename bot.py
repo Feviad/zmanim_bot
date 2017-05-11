@@ -1,287 +1,561 @@
 # -*- coding: utf-8 -*-
-import sqlite3
-import requests
 import re
-import pytz
+import os
+import sqlite3
+import urllib.parse as urlparse
+import psycopg2
 import telebot
+import botan
 import config
 import zmanim
 import rosh_hodesh
 import shabbos
 import daf
-import data
 import functions as f
-from datetime import datetime, timedelta
-import holidays
+import holidays as h
+from flask import Flask, request
+
 
 # Подключение к боту
 bot = telebot.TeleBot(config.TOKEN)
 URL = 'http://db.ou.org/zmanim'
 
 # подключение к БД
-conn = sqlite3.connect('telegram_bot.db')
+if os.environ.get('LOCAL') == 'YES':
+    conn = sqlite3.connect('telegram_bot.db')
+else:
+    urlparse.uses_netloc.append("postgres")
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    conn = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
 cur = conn.cursor()
 
-
-# Логирование запросов
-def log(message, answer):
-    print('\n ---------------------------')
-    from datetime import datetime
-    print(datetime.now())
-    print('Сообщение от {0} {1}. (id = {2}) \n'
-          'Текст - {3}'.format(message.from_user.first_name,
-                               message.from_user.last_name,
-                               str(message.from_user.id), message.text
-                               )
-          )
-    print(answer, '\n')
+loc_pattern = r'^-?\d{1,2}\.{1}\d+, {1}-?\d{1,2}\.{1}\d+$'
 
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     # проверяем id в бд, если нет - добавляем
-    f.check_id_in_db(message.from_user.id)
+    f.check_id_in_db(message.from_user)
     user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
     user_markup.row('Русский', 'English')
     bot.send_message(message.from_user.id,
                      'Выберите язык/Choose the language',
                      reply_markup=user_markup
                      )
-    answer = 'Запустил старт'
-    log(message, answer)
+    botan.track(message.from_user.id, message, 'start')
+
+
+@bot.message_handler(commands=['help'])
+def handle_help(message):
+    menu = telebot.types.ReplyKeyboardMarkup(True, False)
+    menu.row('🇷🇺', '🇱🇷', 'Назад/Back')
+    help_str = 'Пожалуйста, выберите язык справки'
+    bot.send_message(message.from_user.id,
+                     help_str,
+                     reply_markup=menu)
+    botan.track(message.from_user.id, message, 'help')
+
+
+@bot.message_handler(commands=['report'])
+def handle_report(message):
+    report_str = 'Чтобы сообщить об ошибке, пожалуйста, напишите сюда \n' \
+                 't.me/benyomin, или сюда \nt.me/Meir_Yartzev. \nПожалуйста,' \
+                 ' убедитесь, что вы ознакомились с часто задаваемыми' \
+                 ' вопросами, доступными по команде /help\n\nFor bug report ' \
+                 'please write to \nt.me/benyomin or \nt.me/Meir_Yartzev. ' \
+                 '\nPlease, make sure that you had been read '\
+                 'F.A.Q. available by command /help'
+    bot.send_message(message.from_user.id,
+                     report_str,
+                     disable_web_page_preview=True)
+    botan.track(message.from_user.id, message, 'report')
 
 
 @bot.message_handler(content_types=['location'])
 def handle_text(message):
-    f.check_location(message)
+    f.check_location(message.from_user.id,
+                     message.location.latitude,
+                     message.location.longitude
+                     )
     tz = f.get_tz_by_location(f.get_location_by_id(message.from_user.id))
     f.check_tz(message.from_user.id, tz)
-    answer = 'Запустил геолокацию'
-    log(message, answer)
+    botan.track(message.from_user.id, message, 'Получил геометку')
 
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    if message.text == 'Сменить язык':
+    if message.text == 'Сменить язык' or    \
+       message.text == 'Change language' or \
+       message.text == 'Назад/Back':
         user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
         user_markup.row('Русский', 'English')
         bot.send_message(message.from_user.id, 'Выберите язык/'
                                                'Choose the language',
                          reply_markup=user_markup)
-        answer = 'Запустил смену языка'
-        log(message, answer)
-    if message.text == 'Change language':
-        user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
-        user_markup.row('Русский', 'English')
-        bot.send_message(message.from_user.id, 'Выберите язык/'
-                                               'Choose the language',
-                         reply_markup=user_markup)
-        answer = 'Запустил смену языка'
-        log(message, answer)
+        botan.track(message.from_user.id, message, 'Выбор языка')
 
-    if message.text == 'Русский':
+    elif message.text == '🇱🇷':  # FAQ
+        bot.send_message(message.from_user.id, 'https://goo.gl/4320iu')
+        botan.track(message.from_user.id, message, 'FAQ')
+    elif message.text == '🇷🇺':  # ЧАВО
+        bot.send_message(message.from_user.id, 'https://goo.gl/bavHuO')
+        botan.track(message.from_user.id, message, 'ЧАВО')
+
+    elif message.text == 'Русский':
         user_markup = f.get_main_menu(message.text)
         bot.send_message(message.from_user.id, text='Выберите',
                          reply_markup=user_markup)
-        answer = 'Запустил русский язык'
-        log(message, answer)
-    if message.text == 'English':
+        botan.track(message.from_user.id, message, 'Выбран русский язык')
+    elif message.text == 'English':
         user_markup = f.get_main_menu(message.text)
         bot.send_message(message.from_user.id, text='Choose the option',
                          reply_markup=user_markup)
-        answer = 'Запустил английский язык'
-        log(message, answer)
+        botan.track(message.from_user.id, message, 'Выбран английский язык')
 
-    if message.text == 'Праздники':
-        user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
-        user_markup.row('Рош-Ашана', 'Йом-Кипур')
-        user_markup.row('Суккот', 'Шмини Ацерет и Симхат Тора')
-        user_markup.row('Ханука', 'Ту биШват', 'Пейсах')
-        user_markup.row('Лаг баОмер', 'Шавуот')
-        user_markup.row('15 Ава', 'Израильские праздники')
-        user_markup.row('Назад')
-        bot.send_message(message.from_user.id, 'Выберите',
-                         reply_markup=user_markup)
-        answer = 'Запустил Праздники'
-        log(message, answer)
-    if message.text == 'Посты':
-        user_markup = telebot.types.ReplyKeyboardMarkup(True, False)
-        user_markup.row('Пост 10 Тевета', 'Пост Эстер')
-        user_markup.row('Пост 17 Таммуза', 'Пост 9 Ава')
-        user_markup.row('Пост Гедальи')
-        user_markup.row('Назад')
-        bot.send_message(message.from_user.id, 'Выберите',
-                         reply_markup=user_markup)
-        answer = 'Запустил Посты'
-        log(message, answer)
-
-    if message.text == 'Назад':
-        user_markup = f.get_main_menu('Русский')
-        bot.send_message(message.from_user.id, 'Выберите:',
-                         reply_markup=user_markup)
-        answer = 'Запустил код'
-        log(message, answer)
-    if message.text == 'Back':
-        user_markup = f.get_main_menu('English')
-        bot.send_message(message.from_user.id, 'Choose:',
-                         reply_markup=user_markup)
-        answer = 'Запустил код'
-        log(message, answer)
-
-    if message.text == 'Рош-Ходеш':
-        loc = f.get_location_by_id(message.from_user.id)
-        rh = rosh_hodesh.get_rh(loc, 'Русский')
-        bot.send_message(message.chat.id, rh)
-        answer = 'Запустил Рош-Ходеш рус'
-        log(message, answer)
-    if message.text == 'Rosh Chodesh':
-        loc = f.get_location_by_id(message.from_user.id)
-        rh = rosh_hodesh.get_rh(loc, 'English')
-        bot.send_message(message.chat.id, rh)
-        answer = 'Запустил Рош-Ходеш англ'
-        log(message, answer)
-
-    if message.text == 'Рош-Ашана':
-        bot.send_message(message.chat.id, holidays.RoshHaShanah_str)
-        answer = 'Запустил Рош-Ашана'
-        log(message, answer)
-    if message.text == 'Пост Гедальи':
-        bot.send_message(message.chat.id, holidays.TzomGedaliah_str)
-        answer = 'Запустил Пост Гедальи'
-        log(message, answer)
-    if message.text == 'Йом-Кипур':
-        bot.send_message(message.chat.id, holidays.YomKippur_str)
-        answer = 'Запустил Йом-Кипур'
-        log(message, answer)
-    if message.text == 'Суккот':
-        bot.send_message(message.chat.id, holidays.Succos_str)
-        answer = 'Запустил Суккот'
-        log(message, answer)
-    if message.text == 'Шмини Ацерет и Симхат Тора':
-        bot.send_message(message.chat.id, holidays.ShminiAtzeres_Simhat_str)
-        answer = 'Запустил Шмини Ацерет и Симхат Тора'
-        log(message, answer)
-    if message.text == 'Ханука':
-        bot.send_message(message.chat.id, holidays.Chanukah_str)
-        answer = 'Запустил Хануку'
-        log(message, answer)
-    if message.text == 'Пост 10 Тевета':
-        bot.send_message(message.chat.id, holidays.AsarahBTevet_str)
-        answer = 'Запустил 10 Тевета'
-        log(message, answer)
-    if message.text == 'Ту биШват':
-        bot.send_message(message.chat.id, holidays.TuBShevat_str)
-        answer = 'Запустил Ту биШват'
-        log(message, answer)
-    if message.text == 'Пост Эстер':
-        bot.send_message(message.chat.id, holidays.TaanitEsther_str)
-        answer = 'Запустил Пост Эстер'
-        log(message, answer)
-    if message.text == 'Пурим':
-        bot.send_message(message.chat.id, holidays.Purim_str)
-        answer = 'Запустил Пурим'
-        log(message, answer)
-    if message.text == 'Пейсах':
-        bot.send_message(message.chat.id, holidays.Pesach_str)
-        answer = 'Запустил Пейсах'
-        log(message, answer)
-    if message.text == 'Израильские праздники':
-        bot.send_message(message.chat.id, holidays.Israel_str)
-        answer = 'Запустил Израильские праздники'
-        log(message, answer)
-    if message.text == 'Лаг баОмер':
-        bot.send_message(message.chat.id, holidays.LagBaOmer_str)
-        answer = 'Запустил Лаг баОмер'
-        log(message, answer)
-    if message.text == 'Шавуот':
-        bot.send_message(message.chat.id, holidays.Shavuot_str)
-        answer = 'Запустил Шавуот'
-        log(message, answer)
-    if message.text == 'Пост 17 Таммуза':
-        bot.send_message(message.chat.id, holidays.ShivaAsarBTammuz_str)
-        answer = 'Запустил 17 Таммуза'
-        log(message, answer)
-    if message.text == 'Пост 9 Ава':
-        bot.send_message(message.chat.id, holidays.TishaBAv_str)
-        answer = 'Запустил 9 Ава'
-        log(message, answer)
-    if message.text == '15 Ава':
-        bot.send_message(message.chat.id, holidays.TuBAv_str)
-        answer = 'Запустил 15 Ава'
-        log(message, answer)
-
-    if message.text == 'Шаббат':
-        loc = f.get_location_by_id(message.from_user.id)
-        if not loc:
-            bot.send_message(message.from_user.id, 'Отправьте свое местоположение')
-        else:
-            shabbat_str = shabbos.get_shabbos_string(loc, 'Русский')
-            bot.send_message(message.from_user.id, shabbat_str)
-            answer = 'Запустил Шаббат рус'
-            log(message, answer)
-    if message.text == 'Shabbos':
-        loc = f.get_location_by_id(message.from_user.id)
-        if not loc:
-            bot.send_message(message.from_user.id, 'Send your location')
-        else:
-            shabbat_str = shabbos.get_shabbos_string(loc, 'English')
-            bot.send_message(message.from_user.id, shabbat_str)
-            answer = 'Запустил Шаббат анг'
-            log(message, answer)
-
-    if message.text == 'Расширенные Зманим':
-        loc = f.get_location_by_id(message.from_user.id)
-        if not loc:
-            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
-        else:
-            zmanim_str = zmanim.get_ext_zmanim(loc, 'Русский')
-            bot.send_message(message.chat.id, zmanim_str)
-            answer = 'Запустил Расширенные Зманим рус'
-            log(message, answer)
-    if message.text == 'Extended Zmanim':
-        loc = f.get_location_by_id(message.from_user.id)
-        if not loc:
-            bot.send_message(message.chat.id, 'Send your location')
-        else:
-            zmanim_str = zmanim.get_ext_zmanim(loc, 'English')
-            bot.send_message(message.chat.id, zmanim_str)
-            answer = 'Запустил Расширенные Зманим англ'
-            log(message, answer)
-
-    if message.text == 'Зманим':
+    elif message.text == 'Зманим':
         loc = f.get_location_by_id(message.from_user.id)
         if not loc:
             bot.send_message(message.chat.id, 'Отправьте свое местоположение')
         else:
             zmanim_str = zmanim.get_zmanim(loc, 'Русский')
             bot.send_message(message.chat.id, zmanim_str)
-            answer = 'Запустил Зманим рус'
-            log(message, answer)
-    if message.text == 'Zmanim':
+            botan.track(message.from_user.id, message, 'Зманим Рус')
+    elif message.text == 'Zmanim':
         loc = f.get_location_by_id(message.from_user.id)
         if not loc:
             bot.send_message(message.chat.id, 'Send your location')
         else:
             zmanim_str = zmanim.get_zmanim(loc, 'English')
             bot.send_message(message.chat.id, zmanim_str)
-            answer = 'Запустил Зманим англ'
-            log(message, answer)
+            botan.track(message.from_user.id, message, 'Зманим Англ')
 
-    if message.text == 'Даф Йоми (Талмуд)':
+    elif message.text == 'Расширенные Зманим':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            zmanim_str = zmanim.get_ext_zmanim(loc, 'Русский')
+            bot.send_message(message.chat.id, zmanim_str)
+            botan.track(message.from_user.id, message,
+                        'Расширенные Зманим Рус')
+    elif message.text == 'Extended Zmanim':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            zmanim_str = zmanim.get_ext_zmanim(loc, 'English')
+            bot.send_message(message.chat.id, zmanim_str)
+            botan.track(message.from_user.id, message,
+                        'Расширенные зманим Англ')
+
+    elif message.text == 'Шаббат':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.from_user.id,
+                             'Отправьте свое местоположение')
+        else:
+            shabbat_str = shabbos.get_shabbos_string(loc, 'Русский')
+            bot.send_message(message.from_user.id, shabbat_str)
+            botan.track(message.from_user.id, message, 'Шаббат Рус')
+    elif message.text == 'Shabbos':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.from_user.id, 'Send your location')
+        else:
+            shabbat_str = shabbos.get_shabbos_string(loc, 'English')
+            bot.send_message(message.from_user.id, shabbat_str)
+            botan.track(message.from_user.id, message, 'Шаббат Англ')
+
+    elif message.text == 'Рош-Ходеш':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        rh = rosh_hodesh.get_rh(loc, 'Русский')
+        bot.send_message(message.chat.id, rh)
+        botan.track(message.from_user.id, message, 'Рош-Ходеш Рус')
+    elif message.text == 'Rosh Chodesh':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        rh = rosh_hodesh.get_rh(loc, 'English')
+        bot.send_message(message.chat.id, rh)
+        botan.track(message.from_user.id, message, 'Рош-Ходеш Англ')
+
+    elif message.text == 'Праздники':
+        holiday_menu = f.get_holiday_menu('Русский')
+        bot.send_message(message.from_user.id, 'Выберите '
+                                               '(клавиатуру можно скроллить)',
+                         reply_markup=holiday_menu)
+        botan.track(message.from_user.id, message, 'Праздники Рус')
+    elif message.text == 'Holidays':
+        holiday_menu = f.get_holiday_menu('English')
+        bot.send_message(message.from_user.id, 'Choose (scroll keyboard)',
+                         reply_markup=holiday_menu)
+        botan.track(message.from_user.id, message, 'Праздники Англ')
+
+    elif message.text == 'Посты':
+        fast_menu = f.get_fast_menu('Русский')
+        bot.send_message(message.from_user.id, 'Выберите',
+                         reply_markup=fast_menu)
+        botan.track(message.from_user.id, message, 'Посты Рус')
+    elif message.text == 'Fast days':
+        fast_menu = f.get_fast_menu('English')
+        bot.send_message(message.from_user.id, 'Choose',
+                         reply_markup=fast_menu)
+        botan.track(message.from_user.id, message, 'Посты Англ')
+
+    elif message.text == 'Даф Йоми (Талмуд)':
         loc = f.get_location_by_id(message.from_user.id)
         if not loc:
             bot.send_message(message.chat.id, 'Отправьте свое местоположение')
         daf_yomi = daf.get_daf(loc, 'Русский')
         bot.send_message(message.from_user.id, daf_yomi)
-        answer = 'Запустил даф йоми рус'
-    if message.text == 'Daf Yomi':
+        botan.track(message.from_user.id, message, 'Дай Йоми Рус')
+    elif message.text == 'Daf Yomi':
         loc = f.get_location_by_id(message.from_user.id)
         if not loc:
             bot.send_message(message.chat.id, 'Send your location')
         daf_yomi = daf.get_daf(loc, 'English')
         bot.send_message(message.from_user.id, daf_yomi)
-        answer = 'Запустил даф йоми англ'
+        botan.track(message.from_user.id, message, 'Даф Йоми Англ')
+
+    elif re.match(loc_pattern, message.text):
+        print(123)
+        loc = message.text.split(sep=', ')
+        f.check_location(message.from_user.id, loc[0], loc[1])
+        botan.track(message.from_user.id, message, 'Получил текстовую локацию')
+
+    elif message.text == 'Обновить местоположение':
+        upd_str = 'Пожалуйста, пришлите новые координаты'
+        bot.send_message(message.from_user.id, upd_str)
+        botan.track(message.from_user.id, message, 'Обновить локацию Рус')
+    elif message.text == 'Update location':
+        upd_str = 'Please, send new location'
+        bot.send_message(message.from_user.id, upd_str)
+        botan.track(message.from_user.id, message, 'Обновил Локацию Англ')
+
+    elif message.text == 'Назад':
+        user_markup = f.get_main_menu('Русский')
+        bot.send_message(message.from_user.id, 'Выберите:',
+                         reply_markup=user_markup)
+        botan.track(message.from_user.id, message, 'Назад Рус')
+    elif message.text == 'Back':
+        user_markup = f.get_main_menu('English')
+        bot.send_message(message.from_user.id, 'Choose:',
+                         reply_markup=user_markup)
+        botan.track(message.from_user.id, message, 'Назад Англ')
+###############################################################################
+    elif message.text == 'Рош-Ашана':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.rosh_hashanah(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Рош аШана Рус')
+    elif message.text == 'Rosh HaShanah':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.rosh_hashanah(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Рош аШана Англ')
+
+    elif message.text == 'Йом-Кипур':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.yom_kipur(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Йом-Кипур Рус')
+    elif message.text == 'Yom Kippur':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.yom_kipur(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Йом-Кипур Англ')
+
+    elif message.text == 'Суккот':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.succos(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Суккот Рус')
+    elif message.text == 'Succos':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.succos(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Суккот Англ')
+
+    elif message.text == 'Шмини Ацерет':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.shmini_atzeres_simhat(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Шмини Ацерет Рус')
+    elif message.text == 'Shmini Atzeres':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.shmini_atzeres_simhat(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Шмини Ацерет Англ')
+
+    elif message.text == 'Ханука':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.chanukah(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Ханука Рус')
+    elif message.text == 'Chanukah':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.chanukah(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Ханука Англ')
+
+    elif message.text == 'Ту биШват':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tu_bshevat(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Ту биШват Рус')
+    elif message.text == 'Tu BShevat':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.tu_bshevat(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Ту-биШват Англ')
+
+    elif message.text == 'Пурим':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.purim(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пурим Рус')
+    elif message.text == 'Purim':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.purim(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пурим Англ')
+
+    elif message.text == 'Пейсах':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.pesach(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пейсах Рус')
+    elif message.text == 'Pesach':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.pesach(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пейсах Англ')
+
+    elif message.text == 'Лаг баОмер':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.lag_baomer(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Лаг Баомер Рус')
+    elif message.text == 'Lag BaOmer':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.lag_baomer(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Лаг Баомер Англ')
+
+    elif message.text == 'Шавуот':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.shavuot(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Шавуот Рус')
+    elif message.text == 'Shavuot':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.shavuot(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Шавуот Англ')
+
+    elif message.text == '15 Ава':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tu_bav(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '15 Ава Рус')
+    elif message.text == 'Tu BAv':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tu_bav(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '15 Ава Англ')
+
+    elif message.text == 'Израильские праздники':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.get_israel(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message,
+                        'Израильские праздники Рус')
+    elif message.text == 'Israel holidays':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Send your location')
+        else:
+            h_str = h.get_israel(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message,
+                        'Израильские праздники Англ')
+
+    elif message.text == 'Пост Гедалии':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tzom_gedaliah(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пост Гедалии Рус')
+    elif message.text == 'Tzom Gedaliah':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tzom_gedaliah(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пост Гедалии Англ')
+
+    elif message.text == '10 Тевета':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.asarah_btevet(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '10 Тевета Рус')
+    elif message.text == 'Asarah BTevet':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.asarah_btevet(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '10 Тевета Англ')
+
+    elif message.text == 'Пост Эстер':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.taanit_esther(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пост Эстер Рус')
+    elif message.text == 'Taanit Esther':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.taanit_esther(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, 'Пост Эстер Англ')
+
+    elif message.text == '17 Таммуза':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.shiva_asar_tammuz(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '17 Таммуза Рус')
+    elif message.text == 'Shiva Asar BTammuz':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.shiva_asar_tammuz(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '17 Таммуза Англ')
+
+    elif message.text == '9 Ава':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tisha_bav(loc, 'Русский')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '9 Ава Рус')
+    elif message.text == 'Tisha BAv':
+        loc = f.get_location_by_id(message.from_user.id)
+        if not loc:
+            bot.send_message(message.chat.id, 'Отправьте свое местоположение')
+        else:
+            h_str = h.tisha_bav(loc, 'English')
+            bot.send_message(message.from_user.id, h_str)
+            botan.track(message.from_user.id, message, '9 Ава Англ')
+
+secret = 'vnmoe8fmre432'
+app = Flask(__name__)
+
+
+@app.route('/{}'.format(config.TOKEN), methods=['POST'])
+def view():
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return 'ok'
 
 
 if __name__ == '__main__':
-    bot.polling(none_stop=True, interval=0)
+    bot.remove_webhook()
+    url = config.URL
+    bot.set_webhook(url)
+    app.run(port=3000)

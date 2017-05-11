@@ -24,6 +24,13 @@ def get_zmanim(loc, lang):
     month = re.search(r'[a-zA-z]+', zmanim_dict['hebDateString']) \
         .group(0)
     year_day = re.findall(r'\d+', zmanim_dict['hebDateString'])
+    if zmanim_dict['zmanim']['alos_ma'] == 'X:XX:XX':
+        chazot_time = datetime.strptime(zmanim_dict['zmanim']['chatzos'],
+                                        "%H:%M:%S")
+        chazot_delta = timedelta(hours=12)
+        alot_delta = chazot_time - chazot_delta
+        alot_chazot_time = str(datetime.time(alot_delta))
+        zmanim_dict['zmanim']['alos_ma'] = alot_chazot_time
     if lang == 'Русский':
         zmanim_str = 'Еврейская дата: {} {} {} года\n' \
                      'Рассвет (Алот Ашахар) - {:.5s}\n' \
@@ -81,15 +88,20 @@ def get_ext_zmanim(loc, lang):
     tz_time = pytz.timezone(tz)
     now = datetime.now(tz_time)
     zmanim = requests.get('{}/getCalendarData.php?mode=day&timezone='
-                           '{}&dateBegin={}/{}/{}'
-                           '&lat={}&lng={}'.format(URL, tz, now.month,
-                                                   now.day,
-                                                   now.year,
-                                                   loc[0],
-                                                   loc[1]))
+                          '{}&dateBegin={}/{}/{}'
+                          '&lat={}&lng={}'.format(URL, tz, now.month,
+                                                  now.day,
+                                                  now.year,
+                                                  loc[0],
+                                                  loc[1]))
     zmanim_dict = zmanim.json()
     month = re.search(r'[a-zA-z]+', zmanim_dict['hebDateString']).group(0)
     year_day = re.findall(r'\d+', zmanim_dict['hebDateString'])
+    if zmanim_dict['zmanim']['sof_zman_shema_ma'] == 'X:XX:XX'\
+            or zmanim_dict['zmanim']['sof_zman_tefila_ma'] == 'X:XX:XX':
+            zmanim_dict['zmanim']['sof_zman_shema_ma'] = '00:00:00'
+            zmanim_dict['zmanim']['sof_zman_tefila_ma'] = '00:00:00'
+
     # блок вычисления времени путем вычитания
     d1 = datetime.strptime(zmanim_dict['zmanim']['sof_zman_shema_ma'],
                            "%H:%M:%S")
@@ -108,6 +120,14 @@ def get_ext_zmanim(loc, lang):
     chazot_laila = str(datetime.time(d6))
     shaa_zman_ma = str(d2 - d1)  # астрономический час по маген авраам
     shaa_zman_gra = str(d4 - d3)  # астрономический час по арго
+    if zmanim_dict['zmanim']['alos_ma'] == 'X:XX:XX':
+        chazot_time = datetime.strptime(zmanim_dict['zmanim']['chatzos'],
+                                        "%H:%M:%S")
+
+        chazot_delta = timedelta(hours=12)
+        alot_delta = chazot_time - chazot_delta
+        alot_chazot_time = str(datetime.time(alot_delta))
+        zmanim_dict['zmanim']['alos_ma'] = alot_chazot_time
     if lang == 'Русский':
         zmanim_str = 'Еврейская дата: {} {} {}\n\n' \
                      'Рассвет (Алот Ашахар) - {:.5s}\n' \
@@ -196,5 +216,5 @@ def get_ext_zmanim(loc, lang):
     return zmanim_str
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     pass
