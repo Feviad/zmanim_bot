@@ -75,15 +75,18 @@ def get_holiday_data(holidays_dict, loc, lang):
     # tz = f.get_tz_by_location(loc)
     tz = 'Europe/Moscow'
     print(1)
-    tz_time = pytz.timezone(tz)
+    # tz_time = pytz.timezone(tz)
     print(2)
-    now = datetime.now(tz_time)
+    # now = datetime.now(tz_time)
     print(3)
-    year = now.year
+    # year = now.year
+    year = 2017
     print(4)
-    month = now.month
+    # month = now.month
+    month = 5
     print(5)
-    day = now.day
+    # day = now.day
+    day = 14
     # print('T1', holidays_dict)
     # print('t2', loc)
     # print('t3', lang)
