@@ -896,12 +896,15 @@ def tu_bav(loc, lang):
 
 
 def rosh_hashanah(loc, lang):
+    print(loc, lang)
+    print(1)
     rosh_hashanah_name = get_holiday_name(index(14, loc), lang)
     rosh_date = get_holiday_data(index(14, loc), loc, lang)
     rosh_time = rosh_ash_shavout(index(14, loc), loc, lang)
     rosh_hashanah_str = f'{rosh_hashanah_name}\n' \
                         f'{rosh_date}\n' \
                         f'{rosh_time}'
+    print(2)
     return rosh_hashanah_str
 
 
