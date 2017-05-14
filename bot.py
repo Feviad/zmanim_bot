@@ -237,15 +237,9 @@ def handle_text(message):
         if not loc:
             bot.send_message(message.chat.id, 'Отправьте свое местоположение')
         else:
-            bot.send_message(message.chat.id, 'ну тип начало')
+            loc = ['55.7', '37.5']
             h_str = h.rosh_hashanah(loc, 'Русский')
-            bot.send_message(message.chat.id, 'рас функция')
-            h_date = h.rosh_hashana_date(loc, 'Русский')
-            bot.send_message(message.chat.id, 'два функция')
-            h_time = h.rosh_hashana_time(loc, 'Русский')
-            bot.send_message(message.chat.id, 'ололо')
-            final_str = f'{h_str}\n{h_date}\n{h_time}'
-            bot.send_message(message.from_user.id, final_str)
+            bot.send_message(message.from_user.id, h_str)
             botan.track(message.from_user.id, message, 'Рош аШана Рус')
     elif message.text == 'Rosh HaShanah':
         loc = f.get_location_by_id(message.from_user.id)
