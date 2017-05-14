@@ -536,7 +536,6 @@ def view():
     return 'ok'
 
 
-
 bot.remove_webhook()
 url = config.URL
 bot.set_webhook(url)
