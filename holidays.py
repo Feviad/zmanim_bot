@@ -104,6 +104,7 @@ def get_holiday_data(holidays_dict, loc, lang):
     d_m_2 = re.findall(r'[a-zA-z]+', holidays_dict['dateYear2'])
     brackets = re.findall(r'[(){}[\]]+', holidays_dict['dateYear1'])
     holiday_number = ''
+    print('[TEST 3]', holidays_dict, loc, lang, tz, year, month, day)
     if len(d_m) == 4 or len(d_m_2) == 4:
         day2 = h_numbers[1]
         month2 = data.holidays_month_index[d_m[3]]
