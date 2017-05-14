@@ -96,7 +96,7 @@ def get_holiday_data(holidays_dict, loc, lang):
     # print('t7', year)
     # print('t8', month)
     # print('t9', day)
-    # print('[TEST 2]', holidays_dict, loc, lang, tz, now, year, month, day)
+    print('[TEST 2]', holidays_dict, loc, lang, tz, year, month, day)
     print('TEST 3')
     h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
     d_m = re.findall(r'[a-zA-z]+', holidays_dict['dateYear1'])
