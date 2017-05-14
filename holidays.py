@@ -78,7 +78,7 @@ def get_holiday_data(holidays_dict, loc, lang):
     year = now.year
     month = now.month
     day = now.day
-    print('T1', holidays_dict)
+    # print('T1', holidays_dict)
     print('t2', loc)
     print('t3', lang)
     print('t4', lang)
