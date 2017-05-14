@@ -231,6 +231,7 @@ def get_holiday_data(holidays_dict, loc, lang):
                                  f' {data.holidays_month_en[d_m[1]]},' \
                                  f' {year} year,' \
                                  f' {data.hdays_of_7_en[d_m[0]]}'
+    print(holiday_number)
     print('[TEST 4]', holidays_dict, loc, lang, tz, year, month, day)
     return holiday_number
 
