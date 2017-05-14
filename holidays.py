@@ -71,12 +71,14 @@ def get_holiday_name(holidays_dict, lang):
 
 # Получаем данные по празднику
 def get_holiday_data(holidays_dict, loc, lang):
+    print('[TEST 1]', holidays_dict, loc, lang)
     tz = f.get_tz_by_location(loc)
     tz_time = pytz.timezone(tz)
     now = datetime.now(tz_time)
     year = now.year
     month = now.month
     day = now.day
+    print('[TEST 2]', holidays_dict, loc, lang, tz, now, month, day)
     h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
     d_m = re.findall(r'[a-zA-z]+', holidays_dict['dateYear1'])
     h_numbers_2 = re.findall(r'\d+', holidays_dict['dateYear2'])
