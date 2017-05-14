@@ -71,33 +71,12 @@ def get_holiday_name(holidays_dict, lang):
 
 # Получаем данные по празднику
 def get_holiday_data(holidays_dict, loc, lang):
-    print('[TEST 1]', holidays_dict, loc, lang)
-    # tz = f.get_tz_by_location(loc)
-    tz = 'Europe/Moscow'
-    print(1)
-    # tz_time = pytz.timezone(tz)
-    print(2)
-    # now = datetime.now(tz_time)
-    print(3)
-    # year = now.year
-    year = 2017
-    print(4)
-    # month = now.month
-    month = 5
-    print(5)
-    # day = now.day
-    day = 14
-    # print('T1', holidays_dict)
-    # print('t2', loc)
-    # print('t3', lang)
-    # print('t4', lang)
-    # print('t5', tz),
-    # print('t6', now)
-    # print('t7', year)
-    # print('t8', month)
-    # print('t9', day)
-    print('[TEST 2]', holidays_dict, loc, lang, tz, year, month, day)
-    print('TEST 3')
+    tz = f.get_tz_by_location(loc)
+    tz_time = pytz.timezone(tz)
+    now = datetime.now(tz_time)
+    year = now.year
+    month = now.month
+    day = now.day
     h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
     d_m = re.findall(r'[a-zA-z]+', holidays_dict['dateYear1'])
     h_numbers_2 = re.findall(r'\d+', holidays_dict['dateYear2'])
@@ -920,13 +899,9 @@ def tu_bav(loc, lang):
 
 
 def rosh_hashanah(loc, lang):
-    print(loc, lang)
     rosh_hashanah_name = get_holiday_name(index(14, loc), lang)
-    print(rosh_hashanah_name)
     rosh_date = get_holiday_data(index(14, loc), loc, lang)
-    print(rosh_date)
     rosh_time = rosh_ash_shavout(index(14, loc), loc, lang)
-    print(rosh_time)
     rosh_hashanah_str = f'{rosh_hashanah_name}\n' \
                         f'{rosh_date}\n' \
                         f'{rosh_time}'
