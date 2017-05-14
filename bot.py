@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import os
-import sqlite3
-import urllib.parse as urlparse
-import psycopg2
 import telebot
 import botan
 import config
@@ -19,21 +15,6 @@ from flask import Flask, request
 # Подключение к боту
 bot = telebot.TeleBot(config.TOKEN)
 URL = 'http://db.ou.org/zmanim'
-
-# подключение к БД
-if os.environ.get('LOCAL') == 'YES':
-    conn = sqlite3.connect('telegram_bot.db')
-else:
-    urlparse.uses_netloc.append("postgres")
-    url = urlparse.urlparse(os.environ["DATABASE_URL"])
-    conn = psycopg2.connect(
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        host=url.hostname,
-        port=url.port
-    )
-cur = conn.cursor()
 
 loc_pattern = r'^-?\d{1,2}\.{1}\d+, {1}-?\d{1,2}\.{1}\d+$'
 
@@ -256,8 +237,15 @@ def handle_text(message):
         if not loc:
             bot.send_message(message.chat.id, 'Отправьте свое местоположение')
         else:
+            bot.send_message(message.chat.id, 'ну тип начало')
             h_str = h.rosh_hashanah(loc, 'Русский')
-            bot.send_message(message.from_user.id, h_str)
+            bot.send_message(message.chat.id, 'рас функция')
+            h_date = h.rosh_hashana_date(loc, 'Русский')
+            bot.send_message(message.chat.id, 'два функция')
+            h_time = h.rosh_hashana_time(loc, 'Русский')
+            bot.send_message(message.chat.id, 'ололо')
+            final_str = f'{h_str}\n{h_date}\n{h_time}'
+            bot.send_message(message.from_user.id, final_str)
             botan.track(message.from_user.id, message, 'Рош аШана Рус')
     elif message.text == 'Rosh HaShanah':
         loc = f.get_location_by_id(message.from_user.id)
@@ -542,7 +530,7 @@ def handle_text(message):
             bot.send_message(message.from_user.id, h_str)
             botan.track(message.from_user.id, message, '9 Ава Англ')
 
-secret = 'vnmoe8fmre432'
+
 app = Flask(__name__)
 
 
@@ -554,8 +542,7 @@ def view():
     return 'ok'
 
 
-if __name__ == '__main__':
-    bot.remove_webhook()
-    url = config.URL
-    bot.set_webhook(url)
-    app.run(port=3000)
+
+bot.remove_webhook()
+url = config.URL
+bot.set_webhook(url)

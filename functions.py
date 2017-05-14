@@ -1,3 +1,4 @@
+# -*- coding: utf-8
 import sqlite3
 import urllib.parse as urlparse
 import os
@@ -11,11 +12,18 @@ import config
 
 def check_id_in_db(user):
     if os.environ.get('LOCAL') == 'YES':
-        conn = sqlite3.connect('telegram_bot.db')
+        urlparse.uses_netloc.append("postgres")
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
     else:
         urlparse.uses_netloc.append("postgres")
         url = urlparse.urlparse(os.environ["DATABASE_URL"])
-
         conn = psycopg2.connect(
             database=url.path[1:],
             user=url.username,
@@ -24,14 +32,15 @@ def check_id_in_db(user):
             port=url.port
         )
     cur = conn.cursor()
-    query = f'SELECT id FROM users WHERE id = {user.id}'
-    status = cur.execute(query).fetchone()
+    query = f'SELECT id FROM public.users WHERE id = {user.id}'
+    cur.execute(query)
+    status = cur.fetchone()
     if not status:
         if not user.first_name:
             user.first_name = 'NULL'
         if not user.last_name:
             user.last_name = 'NULL'
-        query = f'INSERT INTO users (id, first_name, last_name)' \
+        query = f'INSERT INTO public.users (id, first_name, last_name)' \
                 f'VALUES (' \
                 f'\'{user.id}\', \'{user.first_name}\', \'{user.last_name}\')'
         cur.execute(query)
@@ -41,7 +50,15 @@ def check_id_in_db(user):
 
 def check_location(user, lat, long):
     if os.environ.get('LOCAL') == 'YES':
-        conn = sqlite3.connect('telegram_bot.db')
+        urlparse.uses_netloc.append("postgres")
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
     else:
         urlparse.uses_netloc.append("postgres")
         url = urlparse.urlparse(os.environ["DATABASE_URL"])
@@ -56,16 +73,16 @@ def check_location(user, lat, long):
     cur = conn.cursor()
     query = f'SELECT latitude, longitude FROM locations ' \
             f'WHERE id = {user}'
-    locations_in_db = cur.execute(query).fetchone()
+    cur.execute(query)
+    locations_in_db = cur.fetchone()
     if not locations_in_db:
         query = f'INSERT INTO locations (id, latitude, longitude)' \
                 f'VALUES (\'{user}\', \'{lat}\', \'{long}\')'
         cur.execute(query)
         conn.commit()
         bot.bot.send_message(user, 'Координаты получены/Location has been '
-                                   'recived')
+                                   'received')
     # если координаты в бд отличаются от присланных, обновляем бд
-        print(locations_in_db)
     elif lat != locations_in_db[0] or long != locations_in_db[1]:
         query = f'UPDATE locations SET ' \
                 f'latitude = \'{lat}\', longitude = \'{long}\'' \
@@ -73,13 +90,20 @@ def check_location(user, lat, long):
         bot.bot.send_message(user, 'Координаты обновлены/Location updated')
         cur.execute(query)
         conn.commit()
-
     conn.close()
 
 
 def get_location_by_id(user_id):
     if os.environ.get('LOCAL') == 'YES':
-        conn = sqlite3.connect('telegram_bot.db')
+        urlparse.uses_netloc.append("postgres")
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
     else:
         urlparse.uses_netloc.append("postgres")
         url = urlparse.urlparse(os.environ["DATABASE_URL"])
@@ -93,7 +117,8 @@ def get_location_by_id(user_id):
         )
     cur = conn.cursor()
     query = f'SELECT latitude, longitude FROM locations WHERE id = {user_id}'
-    location = cur.execute(query).fetchone()
+    cur.execute(query)
+    location = cur.fetchone()
     if not location:
         return False
     return location
@@ -101,7 +126,15 @@ def get_location_by_id(user_id):
 
 def check_tz(user, tz):
     if os.environ.get('LOCAL') == 'YES':
-        conn = sqlite3.connect('telegram_bot.db')
+        urlparse.uses_netloc.append("postgres")
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
     else:
         urlparse.uses_netloc.append("postgres")
         url = urlparse.urlparse(os.environ["DATABASE_URL"])
@@ -115,7 +148,8 @@ def check_tz(user, tz):
         )
     cur = conn.cursor()
     query = f'SELECT tz FROM tz WHERE id = {user}'
-    time_zone = cur.execute(query).fetchone()
+    cur.execute(query)
+    time_zone = cur.fetchone()
     if not time_zone:
         query = f'INSERT INTO tz (id, tz) VALUES ({user}, \'{tz}\')'
         cur.execute(query)
