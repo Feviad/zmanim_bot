@@ -79,15 +79,16 @@ def get_holiday_data(holidays_dict, loc, lang):
     month = now.month
     day = now.day
     # print('T1', holidays_dict)
-    print('t2', loc)
-    print('t3', lang)
-    print('t4', lang)
-    print('t5', tz),
-    print('t6', now)
-    print('t7', year)
-    print('t8', month)
-    print('t9', day)
-    print('[TEST 2]', holidays_dict, loc, lang, tz, now, year, month, day)
+    # print('t2', loc)
+    # print('t3', lang)
+    # print('t4', lang)
+    # print('t5', tz),
+    # print('t6', now)
+    # print('t7', year)
+    # print('t8', month)
+    # print('t9', day)
+    # print('[TEST 2]', holidays_dict, loc, lang, tz, now, year, month, day)
+    print('TEST 3')
     h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
     d_m = re.findall(r'[a-zA-z]+', holidays_dict['dateYear1'])
     h_numbers_2 = re.findall(r'\d+', holidays_dict['dateYear2'])
