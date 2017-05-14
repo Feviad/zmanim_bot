@@ -73,10 +73,15 @@ def get_holiday_name(holidays_dict, lang):
 def get_holiday_data(holidays_dict, loc, lang):
     print('[TEST 1]', holidays_dict, loc, lang)
     tz = f.get_tz_by_location(loc)
+    print(1)
     tz_time = pytz.timezone(tz)
+    print(2)
     now = datetime.now(tz_time)
+    print(3)
     year = now.year
+    print(4)
     month = now.month
+    print(5)
     day = now.day
     # print('T1', holidays_dict)
     # print('t2', loc)
