@@ -72,7 +72,8 @@ def get_holiday_name(holidays_dict, lang):
 # Получаем данные по празднику
 def get_holiday_data(holidays_dict, loc, lang):
     print('[TEST 1]', holidays_dict, loc, lang)
-    tz = f.get_tz_by_location(loc)
+    # tz = f.get_tz_by_location(loc)
+    tz = 'Europe/Moscow'
     print(1)
     tz_time = pytz.timezone(tz)
     print(2)
