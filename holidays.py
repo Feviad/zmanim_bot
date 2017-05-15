@@ -782,17 +782,21 @@ index = get_holidays_dict
 
 
 def tu_bshevat(loc, lang):
-    tu_bshevat_name = get_holiday_name(index(0, loc), lang)
-    tu_bshevat_date = get_holiday_data(index(0, loc), loc, lang)
+    ind = index(0, loc)
+    time.sleep(1)
+    tu_bshevat_name = get_holiday_name(ind, lang)
+    tu_bshevat_date = get_holiday_data(ind, loc, lang)
     tu_bshevat_str = f'{tu_bshevat_name}\n' \
                      f'{tu_bshevat_date}'
     return tu_bshevat_str
 
 
 def taanit_esther(loc, lang):
-    taanit_esther_name = get_holiday_name(index(1, loc), lang)
-    taanit_esther_date = get_holiday_data(index(1, loc), loc, lang)
-    taanit_esther_time = fast(index(1, loc), loc, lang)
+    ind = index(1, loc)
+    time.sleep(1)
+    taanit_esther_name = get_holiday_name(ind, lang)
+    taanit_esther_date = get_holiday_data(ind, loc, lang)
+    taanit_esther_time = fast(ind, loc, lang)
     taanit_esther_str = f'{taanit_esther_name}\n' \
                         f'{taanit_esther_date}\n' \
                         f'{taanit_esther_time}'
@@ -800,10 +804,12 @@ def taanit_esther(loc, lang):
 
 
 def purim(loc, lang):
-    purim_name = get_holiday_name(index(2, loc), lang)
-    purim_date = get_holiday_data(index(2, loc), loc, lang)
-    shushan_purim_name = get_holiday_name(index(3, loc), lang)
-    shushan_purim_date = get_holiday_data(index(3, loc), loc, lang)
+    ind = index(2, loc)
+    time.sleep(1)
+    purim_name = get_holiday_name(ind, lang)
+    purim_date = get_holiday_data(ind, loc, lang)
+    shushan_purim_name = get_holiday_name(ind, lang)
+    shushan_purim_date = get_holiday_data(ind, loc, lang)
     purim_str = f'{purim_name}\n' \
                 f'{purim_date}\n\n' \
                 f'{shushan_purim_name}\n' \
@@ -812,10 +818,12 @@ def purim(loc, lang):
 
 
 def pesach(loc, lang):
-    pesach_name = get_holiday_name(index(4, loc), lang)
-    pesach_date = get_holiday_data(index(4, loc), loc, lang)
-    pesach_time = pesach_sukkot(index(4, loc), 1, loc, lang)
-    pesach_time2 = pesach_sukkot(index(4, loc), 2, loc, lang)
+    ind = index(3, loc)
+    time.sleep(1)
+    pesach_name = get_holiday_name(ind, lang)
+    pesach_date = get_holiday_data(ind, loc, lang)
+    pesach_time = pesach_sukkot(ind, 1, loc, lang)
+    pesach_time2 = pesach_sukkot(ind, 2, loc, lang)
     pesach_str = f'{pesach_name}\n' \
                  f'{pesach_date}\n' \
                  f'{pesach_time}\n\n' \
@@ -824,14 +832,22 @@ def pesach(loc, lang):
 
 
 def get_israel(loc, lang):
-    yom_hashoah_name = get_holiday_name(index(5, loc), lang)
-    yom_hashoah_date = get_holiday_data(index(5, loc), loc, lang)
-    yom_hazikaron_name = get_holiday_name(index(6, loc), lang)
-    yom_hazikaron_date = get_holiday_data(index(6, loc), loc, lang)
-    yom_haatzmaut_name = get_holiday_name(index(7, loc), lang)
-    yom_haatzmaut_date = get_holiday_data(index(7, loc), loc, lang)
-    yom_yerushalayim_name = get_holiday_name(index(9, loc), lang)
-    yom_yerushalayim_date = get_holiday_data(index(9, loc), loc, lang)
+    ind_0 = index(5, loc)
+    time.sleep(1)
+    ind_1 = index(6, loc)
+    time.sleep(1)
+    ind_2 = index(7, loc)
+    time.sleep(1)
+    ind_3 = index(9, loc)
+    time.sleep(1)
+    yom_hashoah_name = get_holiday_name(ind_0, lang)
+    yom_hashoah_date = get_holiday_data(ind_0, loc, lang)
+    yom_hazikaron_name = get_holiday_name(ind_1, lang)
+    yom_hazikaron_date = get_holiday_data(ind_1, loc, lang)
+    yom_haatzmaut_name = get_holiday_name(ind_2, lang)
+    yom_haatzmaut_date = get_holiday_data(ind_2, loc, lang)
+    yom_yerushalayim_name = get_holiday_name(ind_3, lang)
+    yom_yerushalayim_date = get_holiday_data(ind_3, loc, lang)
     israel_str = f'{yom_hashoah_name}\n' \
                  f'{yom_hashoah_date}\n\n' \
                  f'{yom_hazikaron_name}\n' \
@@ -844,17 +860,21 @@ def get_israel(loc, lang):
 
 
 def lag_baomer(loc, lang):
-    lag_baomer_name = get_holiday_name(index(8, loc), lang)
-    lag_baomer_date = get_holiday_data(index(8, loc), loc, lang)
+    ind = index(8, loc)
+    time.sleep(1)
+    lag_baomer_name = get_holiday_name(ind, lang)
+    lag_baomer_date = get_holiday_data(ind, loc, lang)
     lag_baomer_str = f'{lag_baomer_name}\n' \
                      f'{lag_baomer_date}'
     return lag_baomer_str
 
 
 def shavuot(loc, lang):
-    shavuot_name = get_holiday_name(index(10, loc), lang)
-    shavuot_date = get_holiday_data(index(10, loc), loc, lang)
-    shavuot_time = rosh_ash_shavout(index(10, loc), loc, lang)
+    ind = index(10, loc)
+    time.sleep(1)
+    shavuot_name = get_holiday_name(ind, lang)
+    shavuot_date = get_holiday_data(ind, loc, lang)
+    shavuot_time = rosh_ash_shavout(ind, loc, lang)
     shavuot_str = f'{shavuot_name}\n' \
                   f'{shavuot_date}\n' \
                   f'{shavuot_time}'
@@ -862,9 +882,11 @@ def shavuot(loc, lang):
 
 
 def shiva_asar_tammuz(loc, lang):
-    shiva_asar_tammuz_name = get_holiday_name(index(11, loc), lang)
-    shiva_asar_tammuz_date = get_holiday_data(index(11, loc), loc, lang)
-    shiva_asar_tammuz_time = fast(index(11, loc), loc, lang)
+    ind = index(11, loc)
+    time.sleep(1)
+    shiva_asar_tammuz_name = get_holiday_name(ind, lang)
+    shiva_asar_tammuz_date = get_holiday_data(ind, loc, lang)
+    shiva_asar_tammuz_time = fast(ind, loc, lang)
     shiva_asar_tammuz_str = f'{shiva_asar_tammuz_name}\n' \
                             f'{shiva_asar_tammuz_date}\n' \
                             f'{shiva_asar_tammuz_time}'
@@ -872,9 +894,11 @@ def shiva_asar_tammuz(loc, lang):
 
 
 def tisha_bav(loc, lang):
-    tisha_bav_name = get_holiday_name(index(12, loc), lang)
-    tisha_bav_date = get_holiday_data(index(12, loc), loc, lang)
-    tisha_bav_time = fast(index(12, loc), loc, lang)
+    ind = index(12, loc)
+    time.sleep(1)
+    tisha_bav_name = get_holiday_name(ind, lang)
+    tisha_bav_date = get_holiday_data(ind, loc, lang)
+    tisha_bav_time = fast(ind, loc, lang)
     tisha_bav_str = f'{tisha_bav_name}\n' \
                     f'{tisha_bav_date}\n' \
                     f'{tisha_bav_time}'
@@ -890,11 +914,11 @@ def tu_bav(loc, lang):
 
 
 def rosh_hashanah(loc, lang):
-    t = index(14, loc)
-    time.sleep(0.85)
-    rosh_hashanah_name = get_holiday_name(t, lang)
-    rosh_date = get_holiday_data(t, loc, lang)
-    rosh_time = rosh_ash_shavout(t, loc, lang)
+    ind = index(14, loc)
+    time.sleep(0.1)
+    rosh_hashanah_name = get_holiday_name(ind, lang)
+    rosh_date = get_holiday_data(ind, loc, lang)
+    rosh_time = rosh_ash_shavout(ind, loc, lang)
     rosh_hashanah_str = f'{rosh_hashanah_name}\n' \
                         f'{rosh_date}\n' \
                         f'{rosh_time}'
@@ -902,13 +926,11 @@ def rosh_hashanah(loc, lang):
 
 
 def tzom_gedaliah(loc, lang):
-    time.sleep(5)
-    tzom_gedaliah_name = get_holiday_name(index(15, loc), lang)
-    time.sleep(5)
-    tzom_gedaliah_date = get_holiday_data(index(15, loc), loc, lang)
-    time.sleep(5)
-    tzom_gedaliah_time = fast(index(15, loc), loc, lang)
-    time.sleep(5)
+    ind = index(15, loc)
+    time.sleep(1)
+    tzom_gedaliah_name = get_holiday_name(ind, lang)
+    tzom_gedaliah_date = get_holiday_data(ind, loc, lang)
+    tzom_gedaliah_time = fast(ind, loc, lang)
     tzom_gedaliah_str = f'{tzom_gedaliah_name}\n' \
                         f'{tzom_gedaliah_date}\n' \
                         f'{tzom_gedaliah_time}'
@@ -916,9 +938,11 @@ def tzom_gedaliah(loc, lang):
 
 
 def yom_kipur(loc, lang):
-    yom_kippur_name = get_holiday_name(index(16, loc), lang)
-    yom_kippur_date = get_holiday_data(index(16, loc), loc, lang)
-    yom_kippur_time = yom_kippurim(index(16, loc), loc, lang)
+    ind = index(16, loc)
+    time.sleep(1)
+    yom_kippur_name = get_holiday_name(ind, lang)
+    yom_kippur_date = get_holiday_data(ind, loc, lang)
+    yom_kippur_time = yom_kippurim(ind, loc, lang)
     yom_kippur_str = f'{yom_kippur_name}\n' \
                      f'{yom_kippur_date}\n' \
                      f'{yom_kippur_time}'
@@ -926,11 +950,17 @@ def yom_kipur(loc, lang):
 
 
 def succos(loc, lang):
-    succos_name = get_holiday_name(index(17, loc), lang)
-    succos_date = get_holiday_data(index(17, loc), loc, lang)
-    succos_time = pesach_sukkot(index(21, loc), 1, loc, lang)
-    hoshana_rabba_name = get_holiday_name(index(18, loc), lang)
-    hoshana_rabba_date = get_holiday_data(index(18, loc), loc, lang)
+    ind_0 = index(17, loc)
+    time.sleep(1)
+    ind_1 = index(21, loc)
+    time.sleep(1)
+    ind_2 = index(18, loc)
+    time.sleep(1)
+    succos_name = get_holiday_name(ind_0, lang)
+    succos_date = get_holiday_data(ind_0, loc, lang)
+    succos_time = pesach_sukkot(ind_1, 1, loc, lang)
+    hoshana_rabba_name = get_holiday_name(ind_2, lang)
+    hoshana_rabba_date = get_holiday_data(ind_2, loc, lang)
     succos_str = f'{succos_name}\n' \
                  f'{succos_date}\n' \
                  f'{succos_time}\n\n' \
@@ -940,11 +970,15 @@ def succos(loc, lang):
 
 
 def shmini_atzeres_simhat(loc, lang):
-    shmini_atzeres_simhat_name = get_holiday_name(index(19, loc), lang)
-    shmini_atzeres_simhat_date = get_holiday_data(index(19, loc), loc, lang)
-    simhat_torah_name = get_holiday_name(index(20, loc), lang)
-    simhat_torah_date = get_holiday_data(index(20, loc), loc, lang)
-    shmini_simhat_time = pesach_sukkot(index(19, loc), 1, loc, lang)
+    ind_0 = index(19, loc)
+    time.sleep(1)
+    ind_1 = index(20, loc)
+    time.sleep(1)
+    shmini_atzeres_simhat_name = get_holiday_name(ind_0, lang)
+    shmini_atzeres_simhat_date = get_holiday_data(ind_0, loc, lang)
+    simhat_torah_name = get_holiday_name(ind_1, lang)
+    simhat_torah_date = get_holiday_data(ind_1, loc, lang)
+    shmini_simhat_time = pesach_sukkot(ind_0, 1, loc, lang)
     shmini_simhat_str = f'{shmini_atzeres_simhat_name}\n' \
                         f'{shmini_atzeres_simhat_date}\n' \
                         f'{simhat_torah_name}\n' \
@@ -952,27 +986,22 @@ def shmini_atzeres_simhat(loc, lang):
                         f'{shmini_simhat_time}'
     return shmini_simhat_str
 
-
-# def SukkotShminiAtzeret(lang):
-#     SukkotShminiAtzeret_name = get_holiday_name(index(21), lang)
-#     SukkotShminiAtzeret_date = get_holiday_data(index(21), lang)
-#     SukkotShminiAtzeret_str = f'{SukkotShminiAtzeret_name}\n' \
-#                               f'{SukkotShminiAtzeret_date}'
-#     return SukkotShminiAtzeret_str
-
-
 def chanukah(loc, lang):
-    chanukah_name = get_holiday_name(index(22, loc), lang)
-    chanukah_date = get_holiday_data(index(22, loc), loc, lang)
+    ind = index(22, loc)
+    time.sleep(1)
+    chanukah_name = get_holiday_name(ind, lang)
+    chanukah_date = get_holiday_data(ind, loc, lang)
     chanukah_str = f'{chanukah_name}\n' \
                    f'{chanukah_date}'
     return chanukah_str
 
 
 def asarah_btevet(loc, lang):
-    asarah_btevet_name = get_holiday_name(index(23, loc), lang)
-    asarah_btevet_date = get_holiday_data(index(23, loc), loc, lang)
-    asarah_btevet_time = fast(index(23, loc), loc, lang)
+    ind = index(23, loc)
+    time.sleep(1)
+    asarah_btevet_name = get_holiday_name(ind, lang)
+    asarah_btevet_date = get_holiday_data(ind, loc, lang)
+    asarah_btevet_time = fast(ind, loc, lang)
     asarah_btevet_str = f'{asarah_btevet_name}\n' \
                         f'{asarah_btevet_date}\n' \
                         f'{asarah_btevet_time}'
