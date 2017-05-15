@@ -2,23 +2,25 @@
 import requests
 import re
 import pytz
+from datetime import datetime, timedelta
 import data
 import functions as f
-from datetime import datetime, timedelta
 
 
-URL = 'http://db.ou.org/zmanim/getCalendarData.php'
+URL = 'http://db.ou.org/zmanim'
 
 
 def get_zmanim(loc, lang):
     tz = f.get_tz_by_location(loc)
     tz_time = pytz.timezone(tz)
     now = datetime.now(tz_time)
-    params = {'mode': 'day',
-              'dateBegin': f'{now.month}/{now.day}/{now.year}',
-              'lat': loc[0],
-              'lng': loc[1]}
-    zmanim = requests.get(URL, params=params, timeout=(5, 5))
+    zmanim = requests.get('{}/getCalendarData.php?mode=day&timezone='
+                          '{}&dateBegin={}/{}/{}'
+                          '&lat={}&lng={}'.format(URL, tz, now.month,
+                                                  now.day,
+                                                  now.year,
+                                                  loc[0],
+                                                  loc[1]))
     zmanim_dict = zmanim.json()
     month = re.search(r'[a-zA-z]+', zmanim_dict['hebDateString']) \
         .group(0)
@@ -87,11 +89,13 @@ def get_ext_zmanim(loc, lang):
     tz = f.get_tz_by_location(loc)
     tz_time = pytz.timezone(tz)
     now = datetime.now(tz_time)
-    params = {'mode': 'day',
-              'dateBegin': f'{now.month}/{now.day}/{now.year}',
-              'lat': loc[0],
-              'lng': loc[1]}
-    zmanim = requests.get(URL, params=params, timeout=(5, 5))
+    zmanim = requests.get('{}/getCalendarData.php?mode=day&timezone='
+                          '{}&dateBegin={}/{}/{}'
+                          '&lat={}&lng={}'.format(URL, tz, now.month,
+                                                  now.day,
+                                                  now.year,
+                                                  loc[0],
+                                                  loc[1]))
     zmanim_dict = zmanim.json()
     month = re.search(r'[a-zA-z]+', zmanim_dict['hebDateString']).group(0)
     year_day = re.findall(r'\d+', zmanim_dict['hebDateString'])
@@ -110,7 +114,13 @@ def get_ext_zmanim(loc, lang):
 
         chazot_laila = str(datetime.time(d6))
         shaa_zman_gra = str(d4 - d3)  # астрономический час по арго
-
+        if zmanim_dict['zmanim']['alos_ma'] == 'X:XX:XX':
+            chazot_time = datetime.strptime(zmanim_dict['zmanim']['chatzos'],
+                                            "%H:%M:%S")
+            chazot_delta = timedelta(hours=12)
+            alot_delta = chazot_time - chazot_delta
+            alot_chazot_time = str(datetime.time(alot_delta))
+            zmanim_dict['zmanim']['alos_ma'] = alot_chazot_time
         if lang == 'Русский':
             zmanim_str = 'Еврейская дата: {} {} {}\n\n' \
                          'Рассвет (Алот Ашахар) - {:.5s}\n' \

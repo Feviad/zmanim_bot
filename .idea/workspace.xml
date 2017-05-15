@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ea000cf0-ba2e-4640-b259-f76f98af3701" name="Default" comment="git">
+    <list default="true" id="ea000cf0-ba2e-4640-b259-f76f98af3701" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zmanim.py" afterPath="$PROJECT_DIR$/zmanim.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,9 +31,19 @@
       <file leaf-file-name="zmanim.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zmanim.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="20" column="61" lean-forward="true" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="61" />
-              <folding />
+            <state relative-caret-position="238">
+              <caret line="20" column="59" lean-forward="true" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
+              <folding>
+                <marker date="1494855328316" expanded="true" signature="5755:10294" ph="..." />
+                <marker date="1494855328316" expanded="true" signature="5785:8173" ph="..." />
+                <marker date="1494855328316" expanded="true" signature="5811:7114" ph="'...'" />
+                <marker date="1494855328316" expanded="true" signature="8205:10294" ph="..." />
+                <marker date="1494855328316" expanded="true" signature="8231:9215" ph="'...'" />
+                <marker date="1494855328316" expanded="true" signature="11285:11645" ph="..." />
+                <marker date="1494855328316" expanded="true" signature="11676:14491" ph="..." />
+                <marker date="1494855328316" expanded="true" signature="11702:13281" ph="'...'" />
+                <marker date="1494855328316" expanded="true" signature="14549:15721" ph="'...'" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -332,7 +343,14 @@
       <option name="project" value="LOCAL" />
       <updated>1494853922079</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="git">
+      <created>1494854419336</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1494854419336</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -402,9 +420,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="git" />
     <MESSAGE value="some Index" />
-    <option name="LAST_COMMIT_MESSAGE" value="some Index" />
+    <MESSAGE value="git" />
+    <option name="LAST_COMMIT_MESSAGE" value="git" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -439,9 +457,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/zmanim.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="20" column="61" lean-forward="true" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="61" />
-          <folding />
+        <state relative-caret-position="238">
+          <caret line="20" column="59" lean-forward="true" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
+          <folding>
+            <marker date="1494855328316" expanded="true" signature="5755:10294" ph="..." />
+            <marker date="1494855328316" expanded="true" signature="5785:8173" ph="..." />
+            <marker date="1494855328316" expanded="true" signature="5811:7114" ph="'...'" />
+            <marker date="1494855328316" expanded="true" signature="8205:10294" ph="..." />
+            <marker date="1494855328316" expanded="true" signature="8231:9215" ph="'...'" />
+            <marker date="1494855328316" expanded="true" signature="11285:11645" ph="..." />
+            <marker date="1494855328316" expanded="true" signature="11676:14491" ph="..." />
+            <marker date="1494855328316" expanded="true" signature="11702:13281" ph="'...'" />
+            <marker date="1494855328316" expanded="true" signature="14549:15721" ph="'...'" />
+          </folding>
         </state>
       </provider>
     </entry>
