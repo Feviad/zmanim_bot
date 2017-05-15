@@ -262,7 +262,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Конец поста: {}' \
                         ' {}\n' \
-                        'Самый ранний выход звезд' \
+                        'Самый ранний выход звезд:' \
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
@@ -279,7 +279,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'The fast ends: {}' \
                         ' {}\n' \
-                        'Earlier time of tzeit akohavim' \
+                        'Earlier time of tzeit akohavim:' \
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
@@ -804,12 +804,14 @@ def taanit_esther(loc, lang):
 
 
 def purim(loc, lang):
-    ind = index(2, loc)
+    ind_0 = index(2, loc)
     time.sleep(1)
-    purim_name = get_holiday_name(ind, lang)
-    purim_date = get_holiday_data(ind, loc, lang)
-    shushan_purim_name = get_holiday_name(ind, lang)
-    shushan_purim_date = get_holiday_data(ind, loc, lang)
+    ind_1 = index(3, loc)
+    time.sleep(1)
+    purim_name = get_holiday_name(ind_0, lang)
+    purim_date = get_holiday_data(ind_0, loc, lang)
+    shushan_purim_name = get_holiday_name(ind_1, lang)
+    shushan_purim_date = get_holiday_data(ind_1, loc, lang)
     purim_str = f'{purim_name}\n' \
                 f'{purim_date}\n\n' \
                 f'{shushan_purim_name}\n' \
