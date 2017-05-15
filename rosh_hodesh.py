@@ -18,7 +18,7 @@ def get_chodesh_dict(hebrew_date, params):
     if month == 6:
         next_year = hebrew_date[0] + 1
         params = {'hebrewYear': next_year}
-        molad_next_year = requests.get(URL, params=params)
+        molad_next_year = requests.get(URL, params=params, timeout=(3, 3))
         new_chodesh_dicts = molad_next_year.json()
         chodesh_dict = new_chodesh_dicts[6]
     elif len(chodesh_dicts) == 13:  # если год високосный
