@@ -7,7 +7,7 @@ import functions as f
 from datetime import datetime, timedelta
 
 
-URL = 'http://db.ou.org/zmanim/getCalendarData.php'
+URL = 'http://db.ou.org/zmanim'
 
 
 def get_zmanim(loc, lang):
@@ -110,7 +110,13 @@ def get_ext_zmanim(loc, lang):
 
         chazot_laila = str(datetime.time(d6))
         shaa_zman_gra = str(d4 - d3)  # астрономический час по арго
-
+        if zmanim_dict['zmanim']['alos_ma'] == 'X:XX:XX':
+            chazot_time = datetime.strptime(zmanim_dict['zmanim']['chatzos'],
+                                            "%H:%M:%S")
+            chazot_delta = timedelta(hours=12)
+            alot_delta = chazot_time - chazot_delta
+            alot_chazot_time = str(datetime.time(alot_delta))
+            zmanim_dict['zmanim']['alos_ma'] = alot_chazot_time
         if lang == 'Русский':
             zmanim_str = 'Еврейская дата: {} {} {}\n\n' \
                          'Рассвет (Алот Ашахар) - {:.5s}\n' \
