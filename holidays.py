@@ -891,6 +891,7 @@ def tu_bav(loc, lang):
 
 def rosh_hashanah(loc, lang):
     t = index(14, loc)
+    time.sleep(2)
     rosh_hashanah_name = get_holiday_name(t, lang)
     rosh_date = get_holiday_data(t, loc, lang)
     rosh_time = rosh_ash_shavout(t, loc, lang)
