@@ -10,6 +10,23 @@ import functions as f
 URL = 'http://db.ou.org/zmanim/getHolidayCalData.php'
 
 
+def send_request(param):
+    response = {}
+    flag = True;
+    while flag:
+        try:
+            response = requests.get(URL, params=param, timeout=(1, 1))
+            flag = False
+        except requests.exceptions.ReadTimeout:
+            print('Oops. Read timeout occured')
+        except requests.exceptions.ConnectTimeout:
+            print('Oops. Connection timeout occured!')
+        except requests.exceptions.ConnectionError:
+            print('Seems like dns lookup failed..')
+
+    return response
+
+
 # Получаем словарь , index - индекс в общем json'е
 def get_holidays_dict(index, loc):
     tz = f.get_tz_by_location(loc)
@@ -20,42 +37,34 @@ def get_holidays_dict(index, loc):
     day = now.day
     if tz in ['Asia/Jerusalem', 'Asia/Tel_Aviv', 'Asia/Hebron']:
         params = {'year': year,
-                 'israelHolidays': 'true'
-                 }
+                  'israelHolidays': 'true'
+                  }
     else:
         params = {'year': year}
 
-    holidays = {}
-    try:
-        holidays = requests.get(URL, params=params, timeout=(5, 5))
-    except requests.exceptions.ReadTimeout:
-        print('Oops. Read timeout occured')
-    except requests.exceptions.ConnectTimeout:
-        print('Oops. Connection timeout occured!')
-    except requests.exceptions.ConnectionError:
-        print('Seems like dns lookup failed..')
+    holidays = send_request(params)
 
     holidays_dicts = holidays.json()
     holidays_dict = holidays_dicts[index]
-    if month == 1 and holidays_dict['name'] == 'AsarahBTevet'\
+    if month == 1 and holidays_dict['name'] == 'AsarahBTevet' \
             or holidays_dict['name'] == 'Chanukah':
         params = {'year': year - 1}
-        holidays = requests.get(URL, params=params, timeout=(5, 5))
+        holidays = send_request(params)
         holidays_dicts = holidays.json()
         holidays_dict = holidays_dicts[index]
         h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
         brackets = re.findall(r'[(){}[\]]+', holidays_dict['dateYear1'])
-        if brackets and int(h_numbers[1]) > int(day)\
-                and holidays_dict['name'] == 'Chanukah'\
-                or brackets and holidays_dict['name'] == 'AsarahBTevet'\
-                and int(h_numbers[0]) > int(day):
+        if brackets and int(h_numbers[1]) > int(day) \
+                and holidays_dict['name'] == 'Chanukah' \
+                or brackets and holidays_dict['name'] == 'AsarahBTevet' \
+                        and int(h_numbers[0]) > int(day):
             params = {'year': year - 1}
-            holidays = requests.get(URL, params=params, timeout=(5, 5))
+            holidays = send_request(params)
             holidays_dicts = holidays.json()
             holidays_dict = holidays_dicts[index]
         else:
             params = {'year': year}
-            holidays = requests.get(URL, params=params, timeout=(5, 5))
+            holidays = send_request(params)
             holidays_dicts = holidays.json()
             holidays_dict = holidays_dicts[index]
     return holidays_dict
@@ -92,7 +101,7 @@ def get_holiday_data(holidays_dict, loc, lang):
         month2 = data.holidays_month_index[d_m[3]]
         if brackets:
             month2 = 13
-        if int(month2) == int(month) and int(day2) < int(day)\
+        if int(month2) == int(month) and int(day2) < int(day) \
                 or int(month2) < int(month):
             if lang == 'Русский':
                 holiday_number = f'Дата: {h_numbers_2[0]}' \
@@ -110,7 +119,7 @@ def get_holiday_data(holidays_dict, loc, lang):
                                  f' {year + 1} year,' \
                                  f' {data.hdays_of_7_en[d_m_2[0]]} -' \
                                  f' {data.hdays_of_7_en[d_m_2[2]]}'
-        elif month == 1 and holidays_dict['name'] == 'AsarahBTevet'\
+        elif month == 1 and holidays_dict['name'] == 'AsarahBTevet' \
                 or month == 1 and holidays_dict['name'] == 'Chanukah':
             if lang == 'Русский':
                 holiday_number = f'Дата: {h_numbers_2[0]}' \
@@ -167,7 +176,7 @@ def get_holiday_data(holidays_dict, loc, lang):
         month1 = data.holidays_month_index[d_m[1]]
         if brackets:
             month1 = 13
-        if int(month1) < int(month) or int(month1) == int(month)\
+        if int(month1) < int(month) or int(month1) == int(month) \
                 and int(day) > int(day1):
             if lang == 'Русский':
                 holiday_number = f'Дата: {h_numbers_2[0]}' \
@@ -192,16 +201,16 @@ def get_holiday_data(holidays_dict, loc, lang):
                                  f' {year} year,' \
                                  f' {data.hdays_of_7_en[d_m_2[0]]}'
         elif month1 == 13:
-                if lang == 'Русский':
-                    holiday_number = f'Дата: {h_numbers[0]}' \
-                                     f' {data.holidays_month[d_m[1]]},' \
-                                     f' {year + 1} годa,' \
-                                     f' {data.hdays_of_7[d_m[0]]}'
-                elif lang == 'English':
-                    holiday_number = f'Date: {h_numbers[0]}' \
-                                     f' {data.holidays_month_en[d_m[1]]},' \
-                                     f' {year + 1} year,' \
-                                     f' {data.hdays_of_7_en[d_m[0]]}'
+            if lang == 'Русский':
+                holiday_number = f'Дата: {h_numbers[0]}' \
+                                 f' {data.holidays_month[d_m[1]]},' \
+                                 f' {year + 1} годa,' \
+                                 f' {data.hdays_of_7[d_m[0]]}'
+            elif lang == 'English':
+                holiday_number = f'Date: {h_numbers[0]}' \
+                                 f' {data.holidays_month_en[d_m[1]]},' \
+                                 f' {year + 1} year,' \
+                                 f' {data.hdays_of_7_en[d_m[0]]}'
         else:
             if lang == 'Русский':
                 holiday_number = f'Дата: {h_numbers[0]}' \
@@ -233,17 +242,21 @@ def fast(get_dict, loc, lang):
     month_time = data.holidays_month_index[d_m[1]]
     if brackets:
         month_time = 13
-    if int(month_time) < int(month) or int(month_time) == int(month)\
+    if int(month_time) < int(month) or int(month_time) == int(month) \
             and int(h_numbers[0]) < int(day):
         month_time = data.holidays_month_index[d_m_2[1]]
         day_time = h_numbers_2[0]
     else:
         day_time = h_numbers[0]
         month_time = data.holidays_month_index[d_m[1]]
-    holiday_time = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={month_time}/{day_time}/{year}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{month_time}/{day_time}/{year}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'
+              }
+    holiday_time = send_request(params)
 
     holi_time_dict = holiday_time.json()
     earlier_time = datetime.strptime(holi_time_dict['zmanim']['sunset'],
@@ -261,10 +274,13 @@ def fast(get_dict, loc, lang):
                                   '%m/%d/%Y')
         d1 = date1 - delta
         spec_date = re.findall(r'\d+', str(d1))
-        holiday_time_av = requests.get(
-            f'{URL}/getCalendarData.php?mode=day&timezone='
-            f'{tz}&dateBegin={spec_date[1]}/{spec_date[2]}/{spec_date[0]}'
-            f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+        params = {'mode': 'day',
+                  'timezone': tz,
+                  'dateBegin': f'{spec_date[1]}/{spec_date[2]}/{spec_date[0]}',
+                  'lat': loc[0],
+                  'lng': loc[1],
+                  'havdala_offset': '72'}
+        holiday_time_av = send_request(params)
         holi_time_dict_av = holiday_time_av.json()
         if lang == 'Русский':
             fast_time = 'Начало поста: {}' \
@@ -276,7 +292,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
-                        'Шмират шаббат килхата: {:.5s}'\
+                        'Шмират шаббат килхата: {:.5s}' \
                 .format(spec_date[2],
                         data.gr_months_index[str(spec_date[1])],
                         holi_time_dict_av["zmanim"]["sunset"],
@@ -293,7 +309,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
-                        'Shmirat shabbat kelhata: {:.5s}'\
+                        'Shmirat shabbat kelhata: {:.5s}' \
                 .format(spec_date[2],
                         data.gr_months_index_en[str(spec_date[1])],
                         holi_time_dict_av["zmanim"]["sunset"],
@@ -317,7 +333,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
-                        'Шмират шаббат килхата: {:.5s}'\
+                        'Шмират шаббат килхата: {:.5s}' \
                 .format(day_time,
                         data.gr_months_index[month_time],
                         chazot_fast,
@@ -334,7 +350,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
-                        'Shmirat shabbat kelhata: {:.5s}'\
+                        'Shmirat shabbat kelhata: {:.5s}' \
                 .format(day_time,
                         data.gr_months_index_en[month_time],
                         chazot_fast,
@@ -352,7 +368,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
-                        'Шмират шаббат килхата: {:.5s}'\
+                        'Шмират шаббат килхата: {:.5s}' \
                 .format(day_time,
                         data.gr_months_index[month_time],
                         holi_time_dict["zmanim"]["alos_ma"],
@@ -369,7 +385,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
-                        'Shmirat shabbat kelhata: {:.5s}'\
+                        'Shmirat shabbat kelhata: {:.5s}' \
                 .format(day_time,
                         data.gr_months_index_en[month_time],
                         holi_time_dict["zmanim"]["alos_ma"],
@@ -394,17 +410,21 @@ def rosh_ash_shavout(get_dict, loc, lang):
     d_m_2 = re.findall(r'[a-zA-z]+', get_dict['dateYear2'])
 
     month_time = data.holidays_month_index[d_m[1]]
-    if month_time < month or month_time == month\
+    if month_time < month or month_time == month \
             and int(h_numbers[0]) < int(day):
         month_time = data.holidays_month_index[d_m_2[1]]
         day_time = h_numbers_2[0]
     else:
         day_time = h_numbers[0]
         month_time = data.holidays_month_index[d_m[1]]
-    holiday_time = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={month_time}/{day_time}/{year}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{month_time}/{day_time}/{year}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time = send_request(params)
 
     holi_time_dict = holiday_time.json()
 
@@ -417,18 +437,30 @@ def rosh_ash_shavout(get_dict, loc, lang):
     spec_date1 = re.findall(r'\d+', str(d1))
     spec_date2 = re.findall(r'\d+', str(d2))
     spec_date3 = re.findall(r'\d+', str(d3))
-    holiday_time_ra1 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date1[1]}/{spec_date1[2]}/{spec_date1[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
-    holiday_time_ra2 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date2[1]}/{spec_date2[2]}/{spec_date2[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
-    holiday_time_ra3 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date3[1]}/{spec_date3[2]}/{spec_date3[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date1[1]}/{spec_date1[2]}/{spec_date1[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra1 = send_request(params)
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date2[1]}/{spec_date2[2]}/{spec_date2[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra2 = send_request(params)
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date3[1]}/{spec_date3[2]}/{spec_date3[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra3 = send_request(params)
 
     holi_time_dict_ra1 = holiday_time_ra1.json()
     holi_time_dict_ra2 = holiday_time_ra2.json()
@@ -452,7 +484,7 @@ def rosh_ash_shavout(get_dict, loc, lang):
                       ' {:.5s}\n' \
                       'Авдала: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)), day_time,
@@ -476,7 +508,7 @@ def rosh_ash_shavout(get_dict, loc, lang):
                       '{:.5s}\n' \
                       'Avdala: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index_en[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)), day_time,
@@ -498,7 +530,7 @@ def rosh_ash_shavout(get_dict, loc, lang):
                       ' {:.5s}\n' \
                       'Авдала: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)), day_time,
@@ -516,7 +548,7 @@ def rosh_ash_shavout(get_dict, loc, lang):
                       ' {:.5s}\n' \
                       'Avdala: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index_en[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)), day_time,
@@ -543,27 +575,35 @@ def yom_kippurim(get_dict, loc, lang):
     d_m_2 = re.findall(r'[a-zA-z]+', get_dict['dateYear2'])
 
     month_time = data.holidays_month_index[d_m[1]]
-    if month_time < month or month_time == month\
+    if month_time < month or month_time == month \
             and int(h_numbers[0]) < int(day):
         month_time = data.holidays_month_index[d_m_2[1]]
         day_time = h_numbers_2[0]
     else:
         day_time = h_numbers[0]
         month_time = data.holidays_month_index[d_m[1]]
-    holiday_time = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={month_time}/{day_time}/{year}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{month_time}/{day_time}/{year}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time = send_request(params)
     holi_time_dict = holiday_time.json()
 
     delta = timedelta(days=1)
     date1 = datetime.strptime(f'{month_time}/{day_time}/{year}', '%m/%d/%Y')
     d1 = date1 - delta
     spec_date = re.findall(r'\d+', str(d1))
-    holiday_time_candle = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date[1]}/{spec_date[2]}/{spec_date[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date[1]}/{spec_date[2]}/{spec_date[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_candle = send_request(params)
     holi_time_dict_candle = holiday_time_candle.json()
 
     d1 = datetime.strptime(holi_time_dict_candle['zmanim']['sunset'],
@@ -576,7 +616,7 @@ def yom_kippurim(get_dict, loc, lang):
                     ' {:.5s}\n' \
                     'Авдала и конец поста: {}' \
                     ' {}' \
-                    ' {:.5s}'\
+                    ' {:.5s}' \
             .format(spec_date[2], data.gr_months_index[str(spec_date[1])],
                     str(datetime.time(d1 - d_delta)), day_time,
                     data.gr_months_index[month_time],
@@ -587,7 +627,7 @@ def yom_kippurim(get_dict, loc, lang):
                     ' {:.5s}\n' \
                     'Avdala and the fast ends: {}' \
                     ' {}' \
-                    ' {:.5s}'\
+                    ' {:.5s}' \
             .format(spec_date[2], data.gr_months_index_en[str(spec_date[1])],
                     str(datetime.time(d1 - d_delta)), day_time,
                     data.gr_months_index_en[month_time],
@@ -625,17 +665,21 @@ def pesach_sukkot(get_dict, number, loc, lang):
             day_time = h_numbers[0]
             month_time = data.holidays_month_index[d_m[1]]
     elif number == 2:
-        if month_time < month or month_time == month\
+        if month_time < month or month_time == month \
                 and int(h_numbers[1]) < int(day):
             month_time = data.holidays_month_index[d_m_2[3]]
             day_time = h_numbers_2[1]
         else:
             day_time = h_numbers[1]
             month_time = data.holidays_month_index[d_m[3]]
-    holiday_time = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={month_time}/{day_time}/{year}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{month_time}/{day_time}/{year}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time = send_request(params)
 
     holi_time_dict = holiday_time.json()
 
@@ -648,18 +692,27 @@ def pesach_sukkot(get_dict, number, loc, lang):
     spec_date1 = re.findall(r'\d+', str(d1))
     spec_date2 = re.findall(r'\d+', str(d2))
     spec_date3 = re.findall(r'\d+', str(d3))
-    holiday_time_ra1 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date1[1]}/{spec_date1[2]}/{spec_date1[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
-    holiday_time_ra2 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date2[1]}/{spec_date2[2]}/{spec_date2[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
-    holiday_time_ra3 = requests.get(
-        f'{URL}/getCalendarData.php?mode=day&timezone='
-        f'{tz}&dateBegin={spec_date3[1]}/{spec_date3[2]}/{spec_date3[0]}'
-        f'&lat={loc[0]}&lng={loc[1]}&havdala_offset=72')
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date1[1]}/{spec_date1[2]}/{spec_date1[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra1 = send_request(params)
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date2[1]}/{spec_date2[2]}/{spec_date2[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra2 = send_request(params)
+    params = {'mode': 'day',
+              'timezone': tz,
+              'dateBegin': f'{spec_date3[1]}/{spec_date3[2]}/{spec_date3[0]}',
+              'lat': loc[0],
+              'lng': loc[1],
+              'havdala_offset': '72'}
+    holiday_time_ra3 = send_request(params)
     holi_time_dict_ra1 = holiday_time_ra1.json()
     holi_time_dict_ra2 = holiday_time_ra2.json()
     holi_time_dict_ra3 = holiday_time_ra3.json()
@@ -684,7 +737,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                           '{:.5s}\n' \
                           'Авдала: {}' \
                           ' {}' \
-                          ' {:.5s}'\
+                          ' {:.5s}' \
                     .format(spec_date1[2],
                             data.gr_months_index[str(spec_date1[1])],
                             str(datetime.time(d_candle - d_delta)),
@@ -709,7 +762,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                           '{:.5s}\n' \
                           'Avdala: {}' \
                           ' {}' \
-                          ' {:.5s}'\
+                          ' {:.5s}' \
                     .format(spec_date1[2],
                             data.gr_months_index_en[str(spec_date1[1])],
                             str(datetime.time(d_candle - d_delta)),
@@ -732,7 +785,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                           ' {:.5s}\n' \
                           'Авдала: {}' \
                           ' {}' \
-                          ' {:.5s}'\
+                          ' {:.5s}' \
                     .format(spec_date1[2],
                             data.gr_months_index[str(spec_date1[1])],
                             str(datetime.time(d_candle - d_delta)),
@@ -750,7 +803,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                           ' {:.5s}\n' \
                           'Avdala: {}' \
                           ' {}' \
-                          ' {:.5s}'\
+                          ' {:.5s}' \
                     .format(spec_date1[2],
                             data.gr_months_index_en[str(spec_date1[1])],
                             str(datetime.time(d_candle - d_delta)),
@@ -766,7 +819,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                       ' {:.5s}\n' \
                       'Авдала: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)),
@@ -778,7 +831,7 @@ def pesach_sukkot(get_dict, number, loc, lang):
                       ' {:.5s}\n' \
                       'Avdala: {}' \
                       ' {}' \
-                      ' {:.5s}'\
+                      ' {:.5s}' \
                 .format(spec_date1[2],
                         data.gr_months_index_en[str(spec_date1[1])],
                         str(datetime.time(d_candle - d_delta)),
@@ -997,6 +1050,7 @@ def shmini_atzeres_simhat(loc, lang):
                         f'{simhat_torah_date}\n\n' \
                         f'{shmini_simhat_time}'
     return shmini_simhat_str
+
 
 def chanukah(loc, lang):
     ind = index(22, loc)

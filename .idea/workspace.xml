@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ea000cf0-ba2e-4640-b259-f76f98af3701" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zmanim.py" afterPath="$PROJECT_DIR$/zmanim.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/holidays.py" afterPath="$PROJECT_DIR$/holidays.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,8 +21,8 @@
       <file leaf-file-name="holidays.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/holidays.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="825" column="37" lean-forward="true" selection-start-line="825" selection-start-column="37" selection-end-line="825" selection-end-column="37" />
+            <state relative-caret-position="833">
+              <caret line="55" column="72" lean-forward="false" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -31,19 +31,9 @@
       <file leaf-file-name="zmanim.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zmanim.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="20" column="59" lean-forward="true" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
-              <folding>
-                <marker date="1494855328316" expanded="true" signature="5755:10294" ph="..." />
-                <marker date="1494855328316" expanded="true" signature="5785:8173" ph="..." />
-                <marker date="1494855328316" expanded="true" signature="5811:7114" ph="'...'" />
-                <marker date="1494855328316" expanded="true" signature="8205:10294" ph="..." />
-                <marker date="1494855328316" expanded="true" signature="8231:9215" ph="'...'" />
-                <marker date="1494855328316" expanded="true" signature="11285:11645" ph="..." />
-                <marker date="1494855328316" expanded="true" signature="11676:14491" ph="..." />
-                <marker date="1494855328316" expanded="true" signature="11702:13281" ph="'...'" />
-                <marker date="1494855328316" expanded="true" signature="14549:15721" ph="'...'" />
-              </folding>
+            <state relative-caret-position="952">
+              <caret line="61" column="48" lean-forward="true" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -72,7 +62,14 @@
       </file>
     </leaf>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>print</find>
+      <find>requests.get</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
+    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -129,6 +126,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
   </component>
   <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
     <UpdatedFiles>
@@ -350,7 +348,14 @@
       <option name="project" value="LOCAL" />
       <updated>1494854419336</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Mair Zmanim">
+      <created>1494855474799</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1494855474799</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -422,7 +427,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="some Index" />
     <MESSAGE value="git" />
-    <option name="LAST_COMMIT_MESSAGE" value="git" />
+    <MESSAGE value="Mair Zmanim" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mair Zmanim" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -457,26 +463,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/zmanim.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="20" column="59" lean-forward="true" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
-          <folding>
-            <marker date="1494855328316" expanded="true" signature="5755:10294" ph="..." />
-            <marker date="1494855328316" expanded="true" signature="5785:8173" ph="..." />
-            <marker date="1494855328316" expanded="true" signature="5811:7114" ph="'...'" />
-            <marker date="1494855328316" expanded="true" signature="8205:10294" ph="..." />
-            <marker date="1494855328316" expanded="true" signature="8231:9215" ph="'...'" />
-            <marker date="1494855328316" expanded="true" signature="11285:11645" ph="..." />
-            <marker date="1494855328316" expanded="true" signature="11676:14491" ph="..." />
-            <marker date="1494855328316" expanded="true" signature="11702:13281" ph="'...'" />
-            <marker date="1494855328316" expanded="true" signature="14549:15721" ph="'...'" />
-          </folding>
+        <state relative-caret-position="952">
+          <caret line="61" column="48" lean-forward="true" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/holidays.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="825" column="37" lean-forward="true" selection-start-line="825" selection-start-column="37" selection-end-line="825" selection-end-column="37" />
+        <state relative-caret-position="833">
+          <caret line="55" column="72" lean-forward="false" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="72" />
           <folding />
         </state>
       </provider>
