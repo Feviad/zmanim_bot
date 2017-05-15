@@ -7,7 +7,7 @@ import re
 import data
 import functions as f
 
-URL = 'http://db.ou.org/zmanim'
+URL = 'http://db.ou.org/zmanim/getHolidayCalData.php'
 
 
 # Получаем словарь , index - индекс в общем json'е
@@ -18,19 +18,29 @@ def get_holidays_dict(index, loc):
     year = now.year
     month = now.month
     day = now.day
-    if tz == 'Asia/Jerusalem' or tz == 'Asia/Tel_Aviv' or tz == 'Asia/Hebron':
-        israel = 'israelHolidays=true'
-        url = f'{URL}/getHolidayCalData.php?year={year}&{israel}'
+    if tz in ['Asia/Jerusalem', 'Asia/Tel_Aviv', 'Asia/Hebron']:
+        params = {'year': year,
+                 'israelHolidays': 'true'
+                 }
     else:
-        url = f'{URL}/getHolidayCalData.php?year={year}'
+        params = {'year': year}
 
-    holidays = requests.get(url)
+    holidays = {}
+    try:
+        holidays = requests.get(URL, params=params, timeout=(5, 5))
+    except requests.exceptions.ReadTimeout:
+        print('Oops. Read timeout occured')
+    except requests.exceptions.ConnectTimeout:
+        print('Oops. Connection timeout occured!')
+    except requests.exceptions.ConnectionError:
+        print('Seems like dns lookup failed..')
+
     holidays_dicts = holidays.json()
     holidays_dict = holidays_dicts[index]
     if month == 1 and holidays_dict['name'] == 'AsarahBTevet'\
             or holidays_dict['name'] == 'Chanukah':
-        url = f'{URL}/getHolidayCalData.php?year={year - 1}'
-        holidays = requests.get(url)
+        params = {'year': year - 1}
+        holidays = requests.get(URL, params=params, timeout=(5, 5))
         holidays_dicts = holidays.json()
         holidays_dict = holidays_dicts[index]
         h_numbers = re.findall(r'\d+', holidays_dict['dateYear1'])
@@ -39,13 +49,13 @@ def get_holidays_dict(index, loc):
                 and holidays_dict['name'] == 'Chanukah'\
                 or brackets and holidays_dict['name'] == 'AsarahBTevet'\
                 and int(h_numbers[0]) > int(day):
-            url = f'{URL}/getHolidayCalData.php?year={year - 1}'
-            holidays = requests.get(url)
+            params = {'year': year - 1}
+            holidays = requests.get(URL, params=params, timeout=(5, 5))
             holidays_dicts = holidays.json()
             holidays_dict = holidays_dicts[index]
         else:
-            url = f'{URL}/getHolidayCalData.php?year={year}'
-            holidays = requests.get(url)
+            params = {'year': year}
+            holidays = requests.get(URL, params=params, timeout=(5, 5))
             holidays_dicts = holidays.json()
             holidays_dict = holidays_dicts[index]
     return holidays_dict
