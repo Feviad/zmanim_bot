@@ -303,7 +303,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Конец поста: {}' \
                         ' {}\n' \
-                        'Самый ранний выход звезд' \
+                        'Самый ранний выход звезд:' \
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
@@ -320,7 +320,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Fast ends: {}' \
                         ' {}\n' \
-                        'Earlier time of tzeit akohavim' \
+                        'Earlier time of tzeit akohavim:' \
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
@@ -338,7 +338,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Конец поста: {}' \
                         ' {}\n' \
-                        'Самый ранний выход звезд' \
+                        'Самый ранний выход звезд:' \
                         ' {:.5s}\n' \
                         'Сефер бен Ашмашот: {:.5s}\n' \
                         'Неварешет: {:.5s}\n' \
@@ -355,7 +355,7 @@ def fast(get_dict, loc, lang):
                         ' {:.5s}\n' \
                         'Fast ends: {}' \
                         ' {}\n' \
-                        'Earlier time of tzeit akohavim' \
+                        'Earlier time of tzeit akohavim:' \
                         ' {:.5s}\n' \
                         'Sefer ben Ashmashot: {:.5s}\n' \
                         'Nevareshet: {:.5s}\n' \
