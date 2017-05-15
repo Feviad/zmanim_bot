@@ -914,9 +914,13 @@ def rosh_hashanah(loc, lang):
 
 
 def tzom_gedaliah(loc, lang):
+    time.sleep(5)
     tzom_gedaliah_name = get_holiday_name(index(15, loc), lang)
+    time.sleep(5)
     tzom_gedaliah_date = get_holiday_data(index(15, loc), loc, lang)
+    time.sleep(5)
     tzom_gedaliah_time = fast(index(15, loc), loc, lang)
+    time.sleep(5)
     tzom_gedaliah_str = f'{tzom_gedaliah_name}\n' \
                         f'{tzom_gedaliah_date}\n' \
                         f'{tzom_gedaliah_time}'
