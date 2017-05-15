@@ -8,17 +8,17 @@ from convertdate import hebrew
 import calendar
 
 
-URL = 'http://db.ou.org/zmanim'
+URL = 'http://db.ou.org/zmanim/getHolidayCalData.php'
 
 
-def get_chodesh_dict(hebrew_date, url):
-    chodesh = requests.get(url)
+def get_chodesh_dict(hebrew_date, params):
+    chodesh = requests.get(URL, params=params)
     chodesh_dicts = chodesh.json()
     month = hebrew_date[1]
     if month == 6:
         next_year = hebrew_date[0] + 1
-        url = f'{URL}/getHolidayCalData.php?hebrewYear={next_year}'
-        molad_next_year = requests.get(url)
+        params = {'hebrewYear': next_year}
+        molad_next_year = requests.get(URL, params=params)
         new_chodesh_dicts = molad_next_year.json()
         chodesh_dict = new_chodesh_dicts[6]
     elif len(chodesh_dicts) == 13:  # если год високосный
@@ -31,7 +31,6 @@ def get_chodesh_dict(hebrew_date, url):
             chodesh_dict = chodesh_dicts[month]
         else:
             chodesh_dict = chodesh_dicts[0]
-
     return chodesh_dict
 
 
@@ -279,8 +278,8 @@ def get_rh(loc, lang):
             hebrew_date[1] + 1,
             hebrew_date[2]
         )
-    url = f'{URL}/getHolidayCalData.php?hebrewYear={hebrew_date[0]}'
-    chodesh_dict = get_chodesh_dict(hebrew_date, url)
+    params = {'hebrewYear': hebrew_date[0]}
+    chodesh_dict = get_chodesh_dict(hebrew_date, params)
     length_of_rh = get_rh_lenght(hebrew_date)
     length_str = f'{length_of_rh}'
 
