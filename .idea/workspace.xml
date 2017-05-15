@@ -21,9 +21,11 @@
       <file leaf-file-name="holidays.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/holidays.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="833">
-              <caret line="55" column="72" lean-forward="false" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="72" />
-              <folding />
+            <state relative-caret-position="255">
+              <caret line="15" column="24" lean-forward="true" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
+              <folding>
+                <element signature="e#24#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -31,9 +33,21 @@
       <file leaf-file-name="zmanim.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zmanim.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="952">
+            <state relative-caret-position="986">
               <caret line="61" column="48" lean-forward="true" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
-              <folding />
+              <folding>
+                <marker date="1494873159510" expanded="true" signature="5755:10294" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="5785:8173" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="5811:7114" ph="'...'" />
+                <marker date="1494873159510" expanded="true" signature="8205:10294" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="8231:9215" ph="'...'" />
+                <marker date="1494873159510" expanded="true" signature="10305:16951" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="11285:11645" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="11676:14491" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="11702:13281" ph="'...'" />
+                <marker date="1494873159510" expanded="true" signature="14523:16951" ph="..." />
+                <marker date="1494873159510" expanded="true" signature="14549:15721" ph="'...'" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,14 +76,7 @@
       </file>
     </leaf>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>print</find>
-      <find>requests.get</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
-    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -125,8 +132,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
-    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
     <UpdatedFiles>
@@ -334,28 +340,7 @@
       <option name="project" value="LOCAL" />
       <updated>1494852514878</updated>
     </task>
-    <task id="LOCAL-00002" summary="some Index">
-      <created>1494853922079</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1494853922079</updated>
-    </task>
-    <task id="LOCAL-00003" summary="git">
-      <created>1494854419336</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1494854419336</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Mair Zmanim">
-      <created>1494855474799</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1494855474799</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -385,6 +370,8 @@
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2703125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -425,10 +412,8 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="some Index" />
     <MESSAGE value="git" />
-    <MESSAGE value="Mair Zmanim" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mair Zmanim" />
+    <option name="LAST_COMMIT_MESSAGE" value="git" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -465,15 +450,127 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="952">
           <caret line="61" column="48" lean-forward="true" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
-          <folding />
+          <folding>
+            <marker date="1494873159510" expanded="true" signature="5755:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5785:8173" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5811:7114" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="8205:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="8231:9215" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="10305:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11285:11645" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11676:14491" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11702:13281" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="14523:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="14549:15721" ph="'...'" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/holidays.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="55" column="72" lean-forward="false" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="72" />
+        <state relative-caret-position="323">
+          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding>
+            <element signature="e#24#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Rar$DIa0.126/holidays.py" />
+    <entry file="file://$PROJECT_DIR$/bot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="27" lean-forward="false" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zmanim.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="952">
+          <caret line="59" column="48" lean-forward="true" selection-start-line="59" selection-start-column="48" selection-end-line="59" selection-end-column="48" />
+          <folding>
+            <marker date="1494873159510" expanded="true" signature="5755:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5785:8173" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5811:7114" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="8205:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="8231:9215" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="10305:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11285:11645" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11676:14491" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11702:13281" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="14523:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="14549:15721" ph="'...'" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/holidays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="23" column="17" lean-forward="true" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+          <folding>
+            <element signature="e#24#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Rar$DIa0.126/holidays.py" />
+    <entry file="file://$PROJECT_DIR$/bot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="27" lean-forward="false" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+          <folding>
+            <element signature="e#24#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zmanim.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="986">
+          <caret line="61" column="48" lean-forward="true" selection-start-line="61" selection-start-column="48" selection-end-line="61" selection-end-column="48" />
+          <folding>
+            <marker date="1494873159510" expanded="true" signature="5755:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5785:8173" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="5811:7114" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="8205:10294" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="8231:9215" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="10305:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11285:11645" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11676:14491" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="11702:13281" ph="'...'" />
+            <marker date="1494873159510" expanded="true" signature="14523:16951" ph="..." />
+            <marker date="1494873159510" expanded="true" signature="14549:15721" ph="'...'" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/holidays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="24" lean-forward="true" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
+          <folding>
+            <element signature="e#24#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
