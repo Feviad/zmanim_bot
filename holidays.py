@@ -8,12 +8,6 @@ import data
 import functions as f
 
 URL = 'http://db.ou.org/zmanim'
-tz = ''
-tz_time = ''
-now = ''
-year = ''
-month = ''
-day = ''
 
 
 # Получаем словарь , index - индекс в общем json'е
@@ -54,7 +48,6 @@ def get_holidays_dict(index, loc):
             holidays = requests.get(url)
             holidays_dicts = holidays.json()
             holidays_dict = holidays_dicts[index]
-
     return holidays_dict
 
 
@@ -84,7 +77,6 @@ def get_holiday_data(holidays_dict, loc, lang):
     d_m_2 = re.findall(r'[a-zA-z]+', holidays_dict['dateYear2'])
     brackets = re.findall(r'[(){}[\]]+', holidays_dict['dateYear1'])
     holiday_number = ''
-    print('[TEST 3]', holidays_dict, loc, lang, tz, year, month, day)
     if len(d_m) == 4 or len(d_m_2) == 4:
         day2 = h_numbers[1]
         month2 = data.holidays_month_index[d_m[3]]
@@ -211,8 +203,6 @@ def get_holiday_data(holidays_dict, loc, lang):
                                  f' {data.holidays_month_en[d_m[1]]},' \
                                  f' {year} year,' \
                                  f' {data.hdays_of_7_en[d_m[0]]}'
-    print(holiday_number)
-    print('[TEST 4]', holidays_dict, loc, lang, tz, year, month, day)
     return holiday_number
 
 
@@ -900,13 +890,10 @@ def tu_bav(loc, lang):
 
 
 def rosh_hashanah(loc, lang):
-    time.sleep(5)
     rosh_hashanah_name = get_holiday_name(index(14, loc), lang)
-    time.sleep(5)
     rosh_date = get_holiday_data(index(14, loc), loc, lang)
     time.sleep(5)
     rosh_time = rosh_ash_shavout(index(14, loc), loc, lang)
-    time.sleep(5)
     rosh_hashanah_str = f'{rosh_hashanah_name}\n' \
                         f'{rosh_date}\n' \
                         f'{rosh_time}'
